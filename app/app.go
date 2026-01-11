@@ -29,7 +29,7 @@ func (a *App) startup(ctx context.Context) {
 
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
+	return fmt.Sprintf("ello %s, It's show time!", name)
 }
 
 
@@ -52,14 +52,20 @@ func listFiles(dir string) []string {
     return files
 }
 
-func listFolders(dir string) []string {
-    var folders []string
+func listFolders(dir string, console string) []string {
+	var folders []string
 
     err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
        if d.IsDir() {
-			if filepath.Base(path) == "title" || filepath.Base(path) == "SAVEDATA" || filepath.Base(path) == "savedata" {
-          		folders = append(folders, path)
-       }
+			if filepath.Base(path) == "title" && console == "wii" {
+				folders = append(folders, path)
+			} else if filepath.Base(path) == "SAVEDATA" && console == "ps" {
+				folders = append(folders, path)
+			} else if filepath.Base(path) == "savedata" && console == "ps" {
+				folders = append(folders, path)
+			} else if filepath.Base(path) == "save" && console == "wiiu" {
+				folders = append(folders, path)
+			}
 	   }  
        return nil
     })
@@ -67,22 +73,53 @@ func listFolders(dir string) []string {
        log.Fatal(err)
     }
 
-    return folders
+	parsedFolders := searchFolders(folders)
+
+    return parsedFolders
+}
+
+func searchFolders(dirs []string) []string {
+    var files []string
+
+	for _, dir := range dirs {
+		
+		err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+			if !d.IsDir() || d.IsDir() {
+				files = append(files, path)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+    return files
 }
 
 func saveSearch() {
 
 	dir := "/"
 
-    files := listFiles(dir)
-	folders := listFolders(dir)
+	retro := listFiles(dir)
+	wii := listFolders(dir, "wii")
+	ps := listFolders(dir, "ps")
+	wiiu  := listFolders(dir, "wiiu")
 
-    for _, v := range files {
-       fmt.Println(v)
+    for _, save := range retro {
+       fmt.Println("Found a retro folder! :", save)
     }
 
-	for _, w := range folders {
-       fmt.Println(w)
+	for _, save := range wii {
+       fmt.Println("Found a Wii folder! :", save)
+    }
+
+	for _, save := range ps {
+       fmt.Println("Found a PS3 or PSP folder! :", save)
+    }
+
+	for _, save := range wiiu {
+       fmt.Println("Found a Wii U or 3DS folder! :", save)
     }
 }
 
