@@ -1,8 +1,11 @@
 module app
 
-go 1.23
+go 1.24.0
 
-require github.com/wailsapp/wails/v2 v2.11.0
+require (
+	github.com/shurcooL/graphql v0.0.0-20230722043721-ed46e5a46466
+	github.com/wailsapp/wails/v2 v2.11.0
+)
 
 require (
 	github.com/bep/debounce v1.2.1 // indirect
@@ -30,7 +33,7 @@ require (
 	github.com/wailsapp/mimetype v1.4.1 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
 	golang.org/x/net v0.35.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/sys v0.40.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 )
 

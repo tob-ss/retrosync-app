@@ -7,8 +7,12 @@ import (
 	"log"
 	"path/filepath"
 	//"strings"
-	//"os"
+	"os"
 	//"io"
+	"time"
+	"github.com/shurcooL/graphql"
+	"sync"
+	"regexp"
 )
 
 // App struct
@@ -34,22 +38,30 @@ func (a *App) Greet(name string) string {
 
 
 
-func listFiles(dir string) []string {
+func listFiles(dir string) ([]string, error) {
     var files []string
 
-    err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
-       if !d.IsDir() {
-			if filepath.Ext(path) == ".srm" || filepath.Ext(path) == ".dsv" || filepath.Ext(path) == ".ps2" || filepath.Ext(path) == ".gci" {
-          		files = append(files, path)
-       }
-	   }  
-       return nil
-    })
-    if err != nil {
-       log.Fatal(err)
-    }
+	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 
-    return files
+		if filepath.Ext(path) == ".srm" || filepath.Ext(path) == ".dsv" || filepath.Ext(path) == ".ps2" || filepath.Ext(path) == ".gci" {
+          	files = append(files, path)
+			fmt.Println(path)
+			}
+
+        /*if d.IsDir() {
+            return nil
+        }*/
+
+		//files = append(files, path)
+
+		//q <- path
+
+        return nil
+    })
+
+	fmt.Println(err)
+
+    return files, nil
 }
 
 func listFolders(dir string, console string) []string {
@@ -59,12 +71,16 @@ func listFolders(dir string, console string) []string {
        if d.IsDir() {
 			if filepath.Base(path) == "title" && console == "wii" {
 				folders = append(folders, path)
-			} else if filepath.Base(path) == "SAVEDATA" && console == "ps" {
+				fmt.Println(path)
+			} else if filepath.Base(path) == "SAVEDATA" && console == "psp" {
 				folders = append(folders, path)
-			} else if filepath.Base(path) == "savedata" && console == "ps" {
+				fmt.Println(path)
+			} else if filepath.Base(path) == "savedata" && console == "ps3" {
 				folders = append(folders, path)
-			} else if filepath.Base(path) == "save" && console == "wiiu" {
+				fmt.Println(path)
+			} else if filepath.Base(path) == "save" && console == "n3ds" {
 				folders = append(folders, path)
+				fmt.Println(path)
 			}
 	   }  
        return nil
@@ -97,30 +113,185 @@ func searchFolders(dirs []string) []string {
     return files
 }
 
+func getInfo(console string, files []string) ([]string, []int64) {
+	directories := []string{}
+	dir_pointer := &directories 
+	timeModified := []int64{}
+	time_pointer := &timeModified
+	for _, save := range files {
+		fileInfo, err := os.Stat(save)
+		modTime := fileInfo.ModTime()
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		*dir_pointer = append(*dir_pointer, save)
+		*time_pointer = append(*time_pointer, modTime.Unix())
+	}
+	return directories, timeModified
+}
+
 func saveSearch() {
+
+	start := time.Now()
 
 	dir := "/"
 
-	retro := listFiles(dir)
+	fmt.Println("doing listfiles, current elapsed time is,", time.Since(start))
+
+	retro, err  := listFiles(dir)
 	wii := listFolders(dir, "wii")
-	ps := listFolders(dir, "ps")
-	wiiu  := listFolders(dir, "wiiu")
+	psp := listFolders(dir, "psp")
+	ps3 := listFolders(dir, "ps3")
+	n3ds := listFolders(dir, "n3ds")
 
-    for _, save := range retro {
-       fmt.Println("Found a retro folder! :", save)
-    }
+	fmt.Println("doing getInfo, current elapsed time is,", time.Since(start), retro, wii, err)
 
-	for _, save := range wii {
-       fmt.Println("Found a Wii folder! :", save)
-    }
+	retro_dirs, retro_time := getInfo("retro", retro)
+	wii_dirs, wii_time := getInfo("wii", wii)
+	psp_dirs, psp_time := getInfo("psp", psp)
+	ps3_dirs, ps3_time := getInfo("ps3", ps3)
+	n3ds_dirs, n3ds_time := getInfo("n3ds", n3ds)
 
-	for _, save := range ps {
-       fmt.Println("Found a PS3 or PSP folder! :", save)
-    }
+	fmt.Println("doing postsaves, current elapsed time is,", time.Since(start))
 
-	for _, save := range wiiu {
-       fmt.Println("Found a Wii U or 3DS folder! :", save)
+	postSaves("Desktop", "retro", retro_dirs, retro_time)
+	postSaves("Desktop", "wii", wii_dirs, wii_time)
+	postSaves("Desktop", "psp", psp_dirs, psp_time)
+	postSaves("Desktop", "ps3", ps3_dirs, ps3_time)
+	postSaves("Desktop", "n3ds", n3ds_dirs, n3ds_time)
+
+	elapsed := time.Since(start)
+	fmt.Println(elapsed)
+}
+
+var m struct {
+	CreateSaves struct {
+		device graphql.String
+		console graphql.String
+		directories []graphql.String
+		timemod []graphql.Int
+	} `graphql:"createSaves(input:{device: $device, console: $console, directories: $directories, timemod: $timemod})"`
+}
+
+func postSaves(device string, console string, dirs []string, timemods []int64) {
+	variables := map[string]any{
+		"device": device,
+		"console": console,
+		"directories": dirs,
+		"timemod": timemods,
+	}
+
+	client := graphql.NewClient("http://localhost:8080", nil)
+
+	fmt.Println("Posting the following: ", variables, "to following client:", client)
+
+	err := client.Mutate(context.Background(), &m, variables)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Successfully posted saves!")
+	}
+	
+}
+
+var (
+    wg *sync.WaitGroup = &sync.WaitGroup{}
+    q  chan string     = make(chan string, 1024)
+)
+
+func processFiles(ctx context.Context, files []string) {
+    defer wg.Done()
+    for {
+        select {
+        case path := <-q:
+            if path == "" {
+                return
+            }
+			//if filepath.Ext(path) == ".srm" || filepath.Ext(path) == ".dsv" || filepath.Ext(path) == ".ps2" || filepath.Ext(path) == ".gci" {
+          		//files = append(files, path)
+			fmt.Println(path)
+			//}
+            
+        case <-ctx.Done():
+            return
+        }
     }
+}
+
+func walk(dir string) error {
+    err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+
+		
+        if err != nil {
+            return err
+        }
+
+        /*if d.IsDir() {
+            return nil
+        }*/
+		
+		fmt.Println(path)
+
+        q <- path
+        return nil
+    })
+
+	fmt.Println(err)
+
+	return nil
+}
+
+func parseFiles(files map[int]string) []string {
+	var dirs []string
+	dirs_pointer := &dirs
+	for key, value := range files {
+		fmt.Println(key)
+		fileExtPattern := regexp.MustCompile(`/\.[0-9a-z]+$/i`)
+		fileExt := fileExtPattern.FindString(value)
+		if fileExt == ".srm" || fileExt == ".dsv" || fileExt == ".ps2" || fileExt == ".gci" {
+			*dirs_pointer = append(*dirs_pointer, value)
+		}
+	}
+	return dirs
+}
+
+func test() {
+
+	start := time.Now()
+
+    ctx := context.Background()
+    ctx, cancel := context.WithCancel(ctx)
+    defer cancel()
+
+    fs := "/"
+
+	var retro []string
+	files_pointer := &retro
+
+    for i := 0; i < 10; i++ {
+        wg.Add(1)
+        go processFiles(ctx, *files_pointer)
+    }
+    retro, err := listFiles(fs)
+
+	if err != nil {
+			fmt.Println("idk")
+		}
+
+    close(q)
+
+    wg.Wait()
+
+	fmt.Println("doing getInfo, current elapsed time is,", time.Since(start), retro)
+
+	//parseFiles(retro)
+
+	//retro_dirs, retro_time := getInfo("retro", retro)
+
+	//postSaves("Desktop", "retro", retro_dirs, retro_time)
+
+	elapsed := time.Since(start)
+	fmt.Println(elapsed)
 }
 
 

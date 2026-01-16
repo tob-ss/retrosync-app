@@ -18,6 +18,8 @@ func main() {
 
 	//searchFolderWii3DS()
 
+	//test()
+
 	saveSearch()
 
 	// Create application with options
