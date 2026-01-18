@@ -3,12 +3,13 @@ module app
 go 1.24.0
 
 require (
-	github.com/shurcooL/graphql v0.0.0-20230722043721-ed46e5a46466
+	github.com/hasura/go-graphql-client v0.15.1
 	github.com/wailsapp/wails/v2 v2.11.0
 )
 
 require (
 	github.com/bep/debounce v1.2.1 // indirect
+	github.com/coder/websocket v1.8.14 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect

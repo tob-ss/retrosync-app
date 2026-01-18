@@ -10,7 +10,7 @@ import (
 	"os"
 	//"io"
 	"time"
-	"github.com/shurcooL/graphql"
+	graphql "github.com/hasura/go-graphql-client"
 	"sync"
 	"regexp"
 )
@@ -164,30 +164,39 @@ func saveSearch() {
 	fmt.Println(elapsed)
 }
 
-var m struct {
-	CreateSaves struct {
-		device graphql.String
-		console graphql.String
-		directories []graphql.String
-		timemod []graphql.Int
-	} `graphql:"createSaves(input:{device: $device, console: $console, directories: $directories, timemod: $timemod})"`
-}
+
+
 
 func postSaves(device string, console string, dirs []string, timemods []int64) {
-	variables := map[string]any{
+	client := graphql.NewClient("http://localhost:8080/query", nil)
+	var m struct {
+		CreateSaves struct {
+			device graphql.String
+			console graphql.String
+			directories []graphql.String
+			timemod []graphql.Int
+		} `graphql:"createSaves(input:{device: $device, console: $console, directories: $directories, timemod: $timemod})"`
+	}
+
+	
+
+	
+	variables := map[string]interface{}{
 		"device": device,
 		"console": console,
 		"directories": dirs,
 		"timemod": timemods,
 	}
 
-	client := graphql.NewClient("http://localhost:8080", nil)
+	
 
 	fmt.Println("Posting the following: ", variables, "to following client:", client)
 
+	fmt.Println(client.Mutate(context.Background(), &m, variables))
+
 	err := client.Mutate(context.Background(), &m, variables)
 	if err != nil {
-		fmt.Println(err)
+		log.Println("json.Compact:", err)
 	} else {
 		fmt.Println("Successfully posted saves!")
 	}
