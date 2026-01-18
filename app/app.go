@@ -10,9 +10,10 @@ import (
 	"os"
 	//"io"
 	"time"
-	graphql "github.com/hasura/go-graphql-client"
 	"sync"
 	"regexp"
+	"github.com/Khan/genqlient/graphql"
+	"net/http"
 )
 
 // App struct
@@ -168,38 +169,18 @@ func saveSearch() {
 
 
 func postSaves(device string, console string, dirs []string, timemods []int64) {
-	client := graphql.NewClient("http://localhost:8080/query", nil)
-	var m struct {
-		CreateSaves struct {
-			device graphql.String
-			console graphql.String
-			directories []graphql.String
-			timemod []graphql.Int
-		} `graphql:"createSaves(input:{device: $device, console: $console, directories: $directories, timemod: $timemod})"`
-	}
+	ctx := context.Background()
+	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
 
-	
+	resp, err := createSaves(ctx, client, device, console, dirs, timemods)
 
-	
-	variables := map[string]interface{}{
-		"device": device,
-		"console": console,
-		"directories": dirs,
-		"timemod": timemods,
-	}
-
-	
-
-	fmt.Println("Posting the following: ", variables, "to following client:", client)
-
-	fmt.Println(client.Mutate(context.Background(), &m, variables))
-
-	err := client.Mutate(context.Background(), &m, variables)
 	if err != nil {
 		log.Println("json.Compact:", err)
-	} else {
-		fmt.Println("Successfully posted saves!")
 	}
+
+	fmt.Printf("Posted metadata", resp)
+	
+	
 	
 }
 
