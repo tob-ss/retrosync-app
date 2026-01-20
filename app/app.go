@@ -53,6 +53,8 @@ func searchResolver(console string) ([]string) {
 	resultsPointer := &results
 	switch console {
 	case "retro":
+		fmt.Println("Parsing", console,"folders!")
+		start := time.Now()
 		retroarchFolders := consoleSearch("/", "retroarch")
 		for _, dir := range retroarchFolders {
 			listFiles, err := listFiles(dir)
@@ -63,38 +65,56 @@ func searchResolver(console string) ([]string) {
 				*resultsPointer = append(*resultsPointer, path)
 			}
 		}
+		elapsed := time.Since(start)
+		fmt.Println("Finished", console,"folders!", elapsed)
 		return results
 	case "wii":
+		fmt.Println("Parsing", console,"folders!")
+		start := time.Now()
 		wiiFolders := consoleSearch("/", "dolphin")
 		for _, dir := range wiiFolders {
 			for _, path := range listFolders(dir, console) {
 				*resultsPointer = append(*resultsPointer, path)
 			}
 		}
+		elapsed := time.Since(start)
+		fmt.Println("Finished", console,"folders!", elapsed)
 		return results
 	case "psp":
+		fmt.Println("Parsing", console,"folders!")
+		start := time.Now()
 		pspFolders := consoleSearch("/", "ppsspp")
 		for _, dir := range pspFolders {
 			for _, path := range listFolders(dir, console) {
 				*resultsPointer = append(*resultsPointer, path)
 			}
 		}
+		elapsed := time.Since(start)
+		fmt.Println("Finished", console,"folders!", elapsed)
 		return results
 	case "ps3":
+		fmt.Println("Parsing", console,"folders!")
+		start := time.Now()
 		ps3Folders := consoleSearch("/", "rpcs3")
 		for _, dir := range ps3Folders {
 			for _, path := range listFolders(dir, console) {
 				*resultsPointer = append(*resultsPointer, path)
 			}
 		}
+		elapsed := time.Since(start)
+		fmt.Println("Finished", console,"folders!", elapsed)
 		return results
 	case "n3ds":
+		fmt.Println("Parsing", console,"folders!")
+		start := time.Now()
 		n3dsFolders := consoleSearch("/", "azahar")
 		for _, dir := range n3dsFolders {
 			for _, path := range listFolders(dir, console) {
 				*resultsPointer = append(*resultsPointer, path)
 			}
 		}
+		elapsed := time.Since(start)
+		fmt.Println("Finished", console,"folders!", elapsed)
 		return results
 	default:
 		return nil
@@ -104,6 +124,8 @@ func searchResolver(console string) ([]string) {
 }
 
 func consoleSearch(dir string, check string) ([]string) {
+	fmt.Println("Starting console search for", check)
+	start := time.Now()
 	var folders []string
 
     err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
@@ -121,10 +143,15 @@ func consoleSearch(dir string, check string) ([]string) {
 
 	parsedFolders := searchFolders(folders)
 
+	elapsed := time.Since(start)
+	fmt.Println("Finished", check, "time elapsed", elapsed)
+
     return parsedFolders
 }
 
 func listFiles(dir string) ([]string, error) {
+	//fmt.Println("Starting listFiles search for", dir)
+	//start := time.Now()
     var files []string
 
 	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
@@ -146,10 +173,15 @@ func listFiles(dir string) ([]string, error) {
 
 	_ = err
 
+	//elapsed := time.Since(start)
+	//fmt.Println("Finished", dir, "time elapsed", elapsed)
+
     return files, nil
 }
 
 func listFolders(dir string, console string) []string {
+	//fmt.Println("Starting listFolders search for", dir)
+	//start := time.Now()
 	var folders []string
 
     err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
@@ -175,6 +207,9 @@ func listFolders(dir string, console string) []string {
     }
 
 	parsedFolders := searchFolders(folders)
+
+	//elapsed := time.Since(start)
+	//fmt.Println("Finished", dir, "time elapsed", elapsed)
 
     return parsedFolders
 }
@@ -219,7 +254,7 @@ func saveSearch() {
 
 	start := time.Now()
 
-	fmt.Println("doing listfiles, current elapsed time is,", time.Since(start))
+	fmt.Println("doing searchResolver, current elapsed time is,", time.Since(start))
 
 	retro := searchResolver("retro")
 	wii := searchResolver("wii")
