@@ -20,8 +20,6 @@ func main() {
 
 	//test()
 
-	saveSearch()
-
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:  "app",

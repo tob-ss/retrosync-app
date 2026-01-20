@@ -10,10 +10,11 @@ import (
 	"os"
 	//"io"
 	"time"
-	"sync"
-	"regexp"
+	//"sync"
+	//"regexp"
 	"github.com/Khan/genqlient/graphql"
 	"net/http"
+	"strings"
 )
 
 // App struct
@@ -34,10 +35,94 @@ func (a *App) startup(ctx context.Context) {
 
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
-	return fmt.Sprintf("ello %s, It's show time!", name)
+	saveSearch()
+	return "bruh"
 }
 
+// need a variant of listfiles/listfolders that takes in a specific parameter first e.g. retrosync or emulator name, so it can do a quick search
 
+// will keep code for full search 
+
+// when user starts scan; it first does the faster search with the parameters, then there will be an prompt or something that the user can click on which will initiate a full scan for saves (or the user can choose where the save is)
+
+// also add some error handling/message in case no games are found
+
+func searchResolver(console string) ([]string) {
+	// switch case for each console; within each one; they'll call listfiles/listfolders and use different dirs depending on the console and it will return whatever listfiles/listfolders return
+	var results []string
+	resultsPointer := &results
+	switch console {
+	case "retro":
+		retroarchFolders := consoleSearch("/", "retroarch")
+		for _, dir := range retroarchFolders {
+			listFiles, err := listFiles(dir)
+			if err != nil {
+				log.Fatal(err)
+			}
+			for _, path := range listFiles {
+				*resultsPointer = append(*resultsPointer, path)
+			}
+		}
+		return results
+	case "wii":
+		wiiFolders := consoleSearch("/", "dolphin")
+		for _, dir := range wiiFolders {
+			for _, path := range listFolders(dir, console) {
+				*resultsPointer = append(*resultsPointer, path)
+			}
+		}
+		return results
+	case "psp":
+		pspFolders := consoleSearch("/", "ppsspp")
+		for _, dir := range pspFolders {
+			for _, path := range listFolders(dir, console) {
+				*resultsPointer = append(*resultsPointer, path)
+			}
+		}
+		return results
+	case "ps3":
+		ps3Folders := consoleSearch("/", "rpcs3")
+		for _, dir := range ps3Folders {
+			for _, path := range listFolders(dir, console) {
+				*resultsPointer = append(*resultsPointer, path)
+			}
+		}
+		return results
+	case "n3ds":
+		n3dsFolders := consoleSearch("/", "azahar")
+		for _, dir := range n3dsFolders {
+			for _, path := range listFolders(dir, console) {
+				*resultsPointer = append(*resultsPointer, path)
+			}
+		}
+		return results
+	default:
+		return nil
+	}
+
+	return nil
+}
+
+func consoleSearch(dir string, check string) ([]string) {
+	var folders []string
+
+    err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+       	if d.IsDir() {
+			base := strings.ToLower(filepath.Base(path))
+			if strings.Contains(base, check) {
+				folders = append(folders, path)
+			}
+		}
+		return nil
+	   	})
+    if err != nil {
+		fmt.Println(err)
+    }
+
+	parsedFolders := searchFolders(folders)
+
+    return parsedFolders
+}
 
 func listFiles(dir string) ([]string, error) {
     var files []string
@@ -46,7 +131,6 @@ func listFiles(dir string) ([]string, error) {
 
 		if filepath.Ext(path) == ".srm" || filepath.Ext(path) == ".dsv" || filepath.Ext(path) == ".ps2" || filepath.Ext(path) == ".gci" {
           	files = append(files, path)
-			fmt.Println(path)
 			}
 
         /*if d.IsDir() {
@@ -60,7 +144,7 @@ func listFiles(dir string) ([]string, error) {
         return nil
     })
 
-	fmt.Println(err)
+	_ = err
 
     return files, nil
 }
@@ -72,16 +156,16 @@ func listFolders(dir string, console string) []string {
        if d.IsDir() {
 			if filepath.Base(path) == "title" && console == "wii" {
 				folders = append(folders, path)
-				fmt.Println(path)
+				
 			} else if filepath.Base(path) == "SAVEDATA" && console == "psp" {
 				folders = append(folders, path)
-				fmt.Println(path)
+				
 			} else if filepath.Base(path) == "savedata" && console == "ps3" {
 				folders = append(folders, path)
-				fmt.Println(path)
+				
 			} else if filepath.Base(path) == "save" && console == "n3ds" {
 				folders = append(folders, path)
-				fmt.Println(path)
+				
 			}
 	   }  
        return nil
@@ -135,17 +219,15 @@ func saveSearch() {
 
 	start := time.Now()
 
-	dir := "/"
-
 	fmt.Println("doing listfiles, current elapsed time is,", time.Since(start))
 
-	retro, err  := listFiles(dir)
-	wii := listFolders(dir, "wii")
-	psp := listFolders(dir, "psp")
-	ps3 := listFolders(dir, "ps3")
-	n3ds := listFolders(dir, "n3ds")
+	retro := searchResolver("retro")
+	wii := searchResolver("wii")
+	psp := searchResolver("psp")
+	ps3 := searchResolver("ps3")
+	n3ds := searchResolver("n3ds")
 
-	fmt.Println("doing getInfo, current elapsed time is,", time.Since(start), retro, wii, err)
+	fmt.Println("doing getInfo, current elapsed time is,", time.Since(start), retro, wii)
 
 	retro_dirs, retro_time := getInfo("retro", retro)
 	wii_dirs, wii_time := getInfo("wii", wii)
@@ -165,9 +247,6 @@ func saveSearch() {
 	fmt.Println(elapsed)
 }
 
-
-
-
 func postSaves(device string, console string, dirs []string, timemods []int64) {
 	ctx := context.Background()
 	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
@@ -184,7 +263,7 @@ func postSaves(device string, console string, dirs []string, timemods []int64) {
 	
 }
 
-var (
+/*var (
     wg *sync.WaitGroup = &sync.WaitGroup{}
     q  chan string     = make(chan string, 1024)
 )
@@ -218,7 +297,7 @@ func walk(dir string) error {
 
         /*if d.IsDir() {
             return nil
-        }*/
+        }
 		
 		fmt.Println(path)
 
@@ -286,7 +365,7 @@ func test() {
 
 
 
-/*func scaning_recursive(dir_path string) ([]string, []string) {
+func scaning_recursive(dir_path string) ([]string, []string) {
 
 	folders := []string{}
 	files := []string{}
@@ -425,7 +504,7 @@ func searchFolderWii3DS() {
 	}
 }
 
-/*func moretesting() {
+func moretesting() {
 	root := "/"
 	fileSystem := os.DirFS(root)
 
