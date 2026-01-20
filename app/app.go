@@ -47,7 +47,37 @@ func (a *App) Greet(name string) string {
 
 // also add some error handling/message in case no games are found
 
-func searchResolver(console string) ([]string) {
+func searchResolver(console string, consoleFolders map[string]string) ([]string) {
+	var results []string
+	resultsPointer := &results
+	fmt.Println("Parsing", console,"folders!")
+	start := time.Now()
+	for key, value := range consoleFolders {
+		if value == "retroarch" && console == "retroarch" {
+				listFiles, err := listFiles(key)
+				if err != nil {
+					log.Fatal(err)
+				}
+			
+				for _, path := range listFiles {
+					*resultsPointer = append(*resultsPointer, path)
+				}
+			}
+		
+		if value == console && console != "retroarch" {
+			for _, path := range listFolders(key, console, true) {
+				*resultsPointer = append(*resultsPointer, path)
+			}
+		}
+	}
+	elapsed := time.Since(start)
+	fmt.Println("Finished", console,"folders!", elapsed)
+	return results
+}
+
+
+
+/*func searchResolver(console string) ([]string) {
 	// switch case for each console; within each one; they'll call listfiles/listfolders and use different dirs depending on the console and it will return whatever listfiles/listfolders return
 	var results []string
 	resultsPointer := &results
@@ -121,18 +151,37 @@ func searchResolver(console string) ([]string) {
 	}
 
 	return nil
-}
+}*/
 
-func consoleSearch(dir string, check string) ([]string) {
-	fmt.Println("Starting console search for", check)
+func consoleSearch(dir string) (map[string]string) {
+	fmt.Println("Starting console search")
 	start := time.Now()
-	var folders []string
+	check := ""
+	var m map[string]string
+	m = make(map[string]string)
 
     err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
        	if d.IsDir() {
 			base := strings.ToLower(filepath.Base(path))
+			check = "retroarch"
 			if strings.Contains(base, check) {
-				folders = append(folders, path)
+				m[path] = check
+			}
+			check = "dolphin"
+			if strings.Contains(base, check) {
+				m[path] = check
+			}
+			check = "ppsspp"
+			if strings.Contains(base, check) {
+				m[path] = check
+			}
+			check = "rpcs3"
+			if strings.Contains(base, check) {
+				m[path] = check
+			}
+			check = "azahar"
+			if strings.Contains(base, check) {
+				m[path] = check
 			}
 		}
 		return nil
@@ -141,12 +190,10 @@ func consoleSearch(dir string, check string) ([]string) {
 		fmt.Println(err)
     }
 
-	parsedFolders := searchFolders(folders)
-
 	elapsed := time.Since(start)
-	fmt.Println("Finished", check, "time elapsed", elapsed)
+	fmt.Println("Finished console search, time elapsed", elapsed)
 
-    return parsedFolders
+    return m
 }
 
 func listFiles(dir string) ([]string, error) {
@@ -179,32 +226,54 @@ func listFiles(dir string) ([]string, error) {
     return files, nil
 }
 
-func listFolders(dir string, console string) []string {
+func listFolders(dir string, console string, quick bool) []string {
 	//fmt.Println("Starting listFolders search for", dir)
 	//start := time.Now()
 	var folders []string
 
-    err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
-       if d.IsDir() {
-			if filepath.Base(path) == "title" && console == "wii" {
-				folders = append(folders, path)
-				
-			} else if filepath.Base(path) == "SAVEDATA" && console == "psp" {
-				folders = append(folders, path)
-				
-			} else if filepath.Base(path) == "savedata" && console == "ps3" {
-				folders = append(folders, path)
-				
-			} else if filepath.Base(path) == "save" && console == "n3ds" {
-				folders = append(folders, path)
-				
+	if quick {
+		err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+			if d.IsDir() {
+				if filepath.Base(path) == "title" && console == "dolphin" {
+					folders = append(folders, path)
+					
+				} else if filepath.Base(path) == "SAVEDATA" && console == "ppsspp" {
+					folders = append(folders, path)
+					
+				} else if filepath.Base(path) == "savedata" && console == "rpcs3" {
+					folders = append(folders, path)
+					
+				} else if filepath.Base(path) == "save" && console == "azahar" {
+					folders = append(folders, path)
+					
+				}
 			}
-	   }  
-       return nil
-    })
-    if err != nil {
-       log.Fatal(err)
-    }
+			 
+			return nil
+    	})
+		_ = err 
+	} else {
+		err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+			if d.IsDir() {
+					if filepath.Base(path) == "title" && console == "wii" {
+						folders = append(folders, path)
+						
+					} else if filepath.Base(path) == "SAVEDATA" && console == "psp" {
+						folders = append(folders, path)
+						
+					} else if filepath.Base(path) == "savedata" && console == "ps3" {
+						folders = append(folders, path)
+						
+					} else if filepath.Base(path) == "save" && console == "n3ds" {
+						folders = append(folders, path)
+						
+					}
+			}  
+			_ = err
+			return nil
+    	})
+		_ = err 
+	}
 
 	parsedFolders := searchFolders(folders)
 
@@ -254,13 +323,15 @@ func saveSearch() {
 
 	start := time.Now()
 
-	fmt.Println("doing searchResolver, current elapsed time is,", time.Since(start))
+	fmt.Println("doing consoleSearch, current elapsed time is,", time.Since(start))
 
-	retro := searchResolver("retro")
-	wii := searchResolver("wii")
-	psp := searchResolver("psp")
-	ps3 := searchResolver("ps3")
-	n3ds := searchResolver("n3ds")
+	consoleFolders := consoleSearch("/")
+
+	retro := searchResolver("retroarch", consoleFolders)
+	wii := searchResolver("dolphin", consoleFolders)
+	psp := searchResolver("ppsspp", consoleFolders)
+	ps3 := searchResolver("rpcs3", consoleFolders)
+	n3ds := searchResolver("azahar", consoleFolders)
 
 	fmt.Println("doing getInfo, current elapsed time is,", time.Since(start), retro, wii)
 
