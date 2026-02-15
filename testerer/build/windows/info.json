@@ -1,0 +1,15 @@
+{
+	"fixed": {
+		"file_version": "{{.Info.ProductVersion}}"
+	},
+	"info": {
+		"0000": {
+			"ProductVersion": "v0.0.1",
+			"CompanyName": "RetroSync",
+			"FileDescription": "Backup Your Retro Game Saves in the Cloud!",
+			"LegalCopyright": "Copyrighted",
+			"ProductName": "RetroSync",
+			"Comments": "Alpha Build"
+		}
+	}
+}

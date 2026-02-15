@@ -15,6 +15,8 @@ import (
 	"github.com/Khan/genqlient/graphql"
 	"net/http"
 	"strings"
+	"math"
+	"math/rand"
 )
 
 // App struct
@@ -34,9 +36,17 @@ func (a *App) startup(ctx context.Context) {
 }
 
 // Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
+func (a *App) StartScan() {
 	saveSearch()
-	return "bruh"
+}
+
+var progress float64
+var progressPointer *float64 = &progress
+
+func (a *App) CheckProgress() float64 {
+	rounded := math.Round((progress * 100))
+	
+	return rounded
 }
 
 // need a variant of listfiles/listfolders that takes in a specific parameter first e.g. retrosync or emulator name, so it can do a quick search
@@ -72,6 +82,7 @@ func searchResolver(console string, consoleFolders map[string]string) ([]string)
 	}
 	elapsed := time.Since(start)
 	fmt.Println("Finished", console,"folders!", elapsed)
+	
 	return results
 }
 
@@ -152,6 +163,7 @@ func searchResolver(console string, consoleFolders map[string]string) ([]string)
 	return nil
 }*/
 
+
 func consoleSearch(dir string) (map[string]string) {
 	fmt.Println("Starting console search")
 	start := time.Now()
@@ -159,7 +171,23 @@ func consoleSearch(dir string) (map[string]string) {
 	var m map[string]string
 	m = make(map[string]string)
 
-    err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+	var dirSize float64
+
+	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+       	dirSize += 1
+		return nil
+	   	})
+    if err != nil {
+		fmt.Println(err)
+    }
+
+	fmt.Println("Directory size is", dirSize)
+
+	var x float64
+
+    err = filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+		x += 1
+		*progressPointer = (0.7 * x) / dirSize
        	if d.IsDir() {
 			base := strings.ToLower(filepath.Base(path))
 			check = "retroarch"
@@ -328,6 +356,7 @@ func saveSearch() {
 
 	// support for custom saves
 	// support for user to select a folder to do a custom search
+	// progress bar should start off at 0
 
 	retro := searchResolver("retroarch", consoleFolders)
 	wii := searchResolver("dolphin", consoleFolders)
@@ -345,6 +374,8 @@ func saveSearch() {
 	psp_dirs, psp_time := getInfo("psp", psp)
 	ps3_dirs, ps3_time := getInfo("ps3", ps3)
 	n3ds_dirs, n3ds_time := getInfo("n3ds", n3ds)
+
+	
 
 	fmt.Println("doing postsaves, current elapsed time is,", time.Since(start))
 
@@ -369,8 +400,16 @@ func postSaves(device string, console string, dirs []string, timemods []int64) {
 	}
 
 	fmt.Printf("Posted metadata", resp)
+
+	rand.Seed(time.Now().UnixNano())
+
+	n := rand.Intn(30)
+
+	time.Sleep(time.Duration(n)*time.Second)
 	
-	
+	*progressPointer += 0.06
+
+	fmt.Printf("Progress is now", progress)
 	
 }
 
