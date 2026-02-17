@@ -352,8 +352,6 @@ func saveSearch() {
 	postSaves("Desktop", "wii", wii_dirs, wii_time)
 	postSaves("Desktop", "psp", psp_dirs, psp_time)
 	postSaves("Desktop", "ps3", ps3_dirs, ps3_time)
-
-	fmt.Println("the n3ds directory list is:", n3ds_dirs)
 	postSaves("Desktop", "n3ds", n3ds_dirs, n3ds_time)
 
 	elapsed := time.Since(start)
