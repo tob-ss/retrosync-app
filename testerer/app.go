@@ -16,7 +16,7 @@ import (
 	"net/http"
 	"strings"
 	"math"
-	"math/rand"
+	//"math/rand"
 )
 
 // App struct
@@ -403,13 +403,15 @@ func postSaves(device string, console string, dirs []string, timemods []int64) {
 		log.Println("json.Compact:", err)
 	}
 
+	_ = resp
+
 	//fmt.Printf("Posted metadata", resp)
 
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
 
 	//n := rand.Intn(30)
 
-	time.Sleep(time.Duration(n)*time.Second)
+	//time.Sleep(time.Duration(n)*time.Second)
 	
 	*progressPointer += 0.06
 
