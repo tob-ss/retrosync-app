@@ -173,7 +173,7 @@ func consoleSearch(dir string) (map[string]string) {
 
 	var dirSize float64
 
-	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+	/*err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
        	dirSize += 1
 		return nil
 	   	})
@@ -183,11 +183,15 @@ func consoleSearch(dir string) (map[string]string) {
 
 	fmt.Println("Directory size is", dirSize)
 
-	var x float64
+	*/
+
+	//var x float64
+
+	*progressPointer = 0.25
 
     err = filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
-		x += 1
-		*progressPointer = (0.7 * x) / dirSize
+		//x += 1
+		//*progressPointer = (0.7 * x) / dirSize
        	if d.IsDir() {
 			base := strings.ToLower(filepath.Base(path))
 			check = "retroarch"
@@ -375,6 +379,7 @@ func saveSearch() {
 	wii_dirs, wii_time := getInfo("wii", wii)
 	psp_dirs, psp_time := getInfo("psp", psp)
 	ps3_dirs, ps3_time := getInfo("ps3", ps3)
+	fmt.Println("the n3ds variable is:", n3ds)
 	n3ds_dirs, n3ds_time := getInfo("n3ds", n3ds)
 
 	
