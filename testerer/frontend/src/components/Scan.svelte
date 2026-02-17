@@ -1,5 +1,19 @@
 <script lang="ts">
     import { CheckProgress } from '../../wailsjs/go/main/App'
+    import { StartScan } from '../../wailsjs/go/main/App';
+   
+
+    let scanningStart: boolean = $state(false);
+
+    
+
+    function startScan() {
+        // call go function to start scan function (savesearch)
+
+        scanningStart = true;
+        StartScan()
+        
+    }
 
     let progress: number = 0
     let barWidth = $state(0)
@@ -48,6 +62,9 @@
             {#if barWidth === 100}
             <div class="col-start-6 row-start-6 col-span-2 grid place-items-center text-xl font-medium text-[#D7D6FC] font-heebo">
                 <button class="rounded-xl border border-(--glass-border) px-16 py-3 font-semibold shadow-lg/65 inset-shadow-sm inset-shadow-yellow/5 backdrop-blur-sm bg-(--glass-bg) inset-shadow-sm -fit cursor-pointer [&:hover]:scale-102 transition duration-10 active:inset-shadow-black/100" style="--bg: color-mix(in oklab, black 20%, transparent)">Next</button>
+            </div>
+            <div class="col-start-2 row-start-6 col-span-2 grid place-items-center text-xl font-medium text-[#D7D6FC] font-heebo">
+                <button onclick={startScan} class="rounded-xl border border-(--glass-border) px-16 py-3 font-semibold shadow-lg/65 inset-shadow-sm inset-shadow-yellow/5 backdrop-blur-sm bg-(--glass-bg) inset-shadow-sm -fit cursor-pointer [&:hover]:scale-102 transition duration-10 active:inset-shadow-black/100" style="--bg: color-mix(in oklab, black 20%, transparent)">Retry</button>
             </div>
             {/if}
         </div>

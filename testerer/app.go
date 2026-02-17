@@ -350,6 +350,8 @@ func saveSearch() {
 
 	start := time.Now()
 
+	*progressPointer = 0
+
 	fmt.Println("doing consoleSearch, current elapsed time is,", time.Since(start))
 
 	consoleFolders := consoleSearch("/")
