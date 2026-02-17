@@ -171,7 +171,7 @@ func consoleSearch(dir string) (map[string]string) {
 	var m map[string]string
 	m = make(map[string]string)
 
-	var dirSize float64
+	//var dirSize float64
 
 	/*err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
        	dirSize += 1
@@ -189,7 +189,7 @@ func consoleSearch(dir string) (map[string]string) {
 
 	*progressPointer = 0.25
 
-    err = filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+    err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		//x += 1
 		//*progressPointer = (0.7 * x) / dirSize
        	if d.IsDir() {
