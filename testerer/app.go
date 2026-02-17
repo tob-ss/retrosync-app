@@ -274,7 +274,7 @@ func listFolders(dir string, console string, quick bool) []string {
 				} else if filepath.Base(path) == "savedata" && console == "rpcs3" {
 					folders = append(folders, path)
 					
-				} else if filepath.Base(path) == "save" && console == "azahar" {
+				} else if filepath.Base(path) == "title" && console == "azahar" {
 					folders = append(folders, path)
 					
 				}
@@ -295,7 +295,7 @@ func listFolders(dir string, console string, quick bool) []string {
 					} else if filepath.Base(path) == "savedata" && console == "ps3" {
 						folders = append(folders, path)
 						
-					} else if filepath.Base(path) == "save" && console == "n3ds" {
+					} else if filepath.Base(path) == "title" && console == "n3ds" {
 						folders = append(folders, path)
 						
 					}
