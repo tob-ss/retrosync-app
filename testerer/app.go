@@ -389,6 +389,8 @@ func saveSearch() {
 
 	elapsed := time.Since(start)
 	fmt.Println(elapsed)
+
+	*progressPointer = 1
 }
 
 func postSaves(device string, console string, dirs []string, timemods []int64) {
@@ -401,11 +403,11 @@ func postSaves(device string, console string, dirs []string, timemods []int64) {
 		log.Println("json.Compact:", err)
 	}
 
-	fmt.Printf("Posted metadata", resp)
+	//fmt.Printf("Posted metadata", resp)
 
 	rand.Seed(time.Now().UnixNano())
 
-	n := rand.Intn(30)
+	//n := rand.Intn(30)
 
 	time.Sleep(time.Duration(n)*time.Second)
 	
