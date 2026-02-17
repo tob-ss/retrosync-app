@@ -305,7 +305,7 @@ func listFolders(dir string, console string, quick bool) []string {
 	parsedFolders := searchFolders(folders)
 
 	//elapsed := time.Since(start)
-	fmt.Println("Finished", dir, "time elapsed", elapsed)
+	fmt.Println("Finished", dir)
 
     return parsedFolders
 }
