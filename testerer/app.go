@@ -320,7 +320,7 @@ func searchFolders(dirs []string) []string {
 	for _, dir := range dirs {
 		
 		err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
-			if !d.IsDir() || d.IsDir() {
+			if !d.IsDir() {
 				files = append(files, path)
 			}
 			return nil
