@@ -234,7 +234,7 @@ func listFiles(dir string) ([]string, error) {
 
 	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 
-		if filepath.Ext(path) == ".srm" || filepath.Ext(path) == ".dsv" || filepath.Ext(path) == ".ps2" || filepath.Ext(path) == ".gci" {
+		if filepath.Ext(path) == ".srm" || filepath.Ext(path) == ".dsv" || filepath.Ext(path) == ".ps2" {
           	files = append(files, path)
 			}
 
