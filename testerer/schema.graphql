@@ -25,6 +25,14 @@ type Post {
   Timemod: [Int!]
 }
 
+type DeviceName {
+  Device: String!
+}
+
+input PostDeviceName {
+  Device: String!
+}
+
 input PostSaves {
   Device: String!
   Console: String!
@@ -34,4 +42,5 @@ input PostSaves {
 
 type Mutation {
   createSaves(input: PostSaves!): Post!
+  deleteLocal(input: PostDeviceName!): DeviceName!
 }

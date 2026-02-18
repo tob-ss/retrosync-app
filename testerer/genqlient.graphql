@@ -6,3 +6,9 @@ mutation createSaves($device: String!, $console: String!, $directories: [String!
     Timemod
   }
 }
+
+mutation deleteLocal($device: String!) {
+  deleteLocal(input:{Device: $device}) {
+    Device
+  }
+}

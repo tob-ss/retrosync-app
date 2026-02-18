@@ -13,7 +13,7 @@ type __createSavesInput struct {
 	Device      string   `json:"device"`
 	Console     string   `json:"console"`
 	Directories []string `json:"directories"`
-	Timemod     []int64    `json:"timemod"`
+	Timemod     []int    `json:"timemod"`
 }
 
 // GetDevice returns __createSavesInput.Device, and is useful for accessing the field via an interface.
@@ -26,14 +26,22 @@ func (v *__createSavesInput) GetConsole() string { return v.Console }
 func (v *__createSavesInput) GetDirectories() []string { return v.Directories }
 
 // GetTimemod returns __createSavesInput.Timemod, and is useful for accessing the field via an interface.
-func (v *__createSavesInput) GetTimemod() []int64 { return v.Timemod }
+func (v *__createSavesInput) GetTimemod() []int { return v.Timemod }
+
+// __deleteLocalInput is used internally by genqlient
+type __deleteLocalInput struct {
+	Device string `json:"device"`
+}
+
+// GetDevice returns __deleteLocalInput.Device, and is useful for accessing the field via an interface.
+func (v *__deleteLocalInput) GetDevice() string { return v.Device }
 
 // createSavesCreateSavesPost includes the requested fields of the GraphQL type Post.
 type createSavesCreateSavesPost struct {
 	Device      string   `json:"Device"`
 	Console     string   `json:"Console"`
 	Directories []string `json:"Directories"`
-	Timemod     []int64    `json:"Timemod"`
+	Timemod     []int    `json:"Timemod"`
 }
 
 // GetDevice returns createSavesCreateSavesPost.Device, and is useful for accessing the field via an interface.
@@ -46,7 +54,7 @@ func (v *createSavesCreateSavesPost) GetConsole() string { return v.Console }
 func (v *createSavesCreateSavesPost) GetDirectories() []string { return v.Directories }
 
 // GetTimemod returns createSavesCreateSavesPost.Timemod, and is useful for accessing the field via an interface.
-func (v *createSavesCreateSavesPost) GetTimemod() []int64 { return v.Timemod }
+func (v *createSavesCreateSavesPost) GetTimemod() []int { return v.Timemod }
 
 // createSavesResponse is returned by createSaves on success.
 type createSavesResponse struct {
@@ -55,6 +63,22 @@ type createSavesResponse struct {
 
 // GetCreateSaves returns createSavesResponse.CreateSaves, and is useful for accessing the field via an interface.
 func (v *createSavesResponse) GetCreateSaves() createSavesCreateSavesPost { return v.CreateSaves }
+
+// deleteLocalDeleteLocalDeviceName includes the requested fields of the GraphQL type DeviceName.
+type deleteLocalDeleteLocalDeviceName struct {
+	Device string `json:"Device"`
+}
+
+// GetDevice returns deleteLocalDeleteLocalDeviceName.Device, and is useful for accessing the field via an interface.
+func (v *deleteLocalDeleteLocalDeviceName) GetDevice() string { return v.Device }
+
+// deleteLocalResponse is returned by deleteLocal on success.
+type deleteLocalResponse struct {
+	DeleteLocal deleteLocalDeleteLocalDeviceName `json:"deleteLocal"`
+}
+
+// GetDeleteLocal returns deleteLocalResponse.DeleteLocal, and is useful for accessing the field via an interface.
+func (v *deleteLocalResponse) GetDeleteLocal() deleteLocalDeleteLocalDeviceName { return v.DeleteLocal }
 
 // The mutation executed by createSaves.
 const createSaves_Operation = `
@@ -74,7 +98,7 @@ func createSaves(
 	device string,
 	console string,
 	directories []string,
-	timemod []int64,
+	timemod []int,
 ) (data_ *createSavesResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "createSaves",
@@ -88,6 +112,40 @@ func createSaves(
 	}
 
 	data_ = &createSavesResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The mutation executed by deleteLocal.
+const deleteLocal_Operation = `
+mutation deleteLocal ($device: String!) {
+	deleteLocal(input: {Device:$device}) {
+		Device
+	}
+}
+`
+
+func deleteLocal(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	device string,
+) (data_ *deleteLocalResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "deleteLocal",
+		Query:  deleteLocal_Operation,
+		Variables: &__deleteLocalInput{
+			Device: device,
+		},
+	}
+
+	data_ = &deleteLocalResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(

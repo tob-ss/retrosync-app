@@ -333,10 +333,10 @@ func searchFolders(dirs []string) []string {
     return files
 }
 
-func getInfo(console string, files []string) ([]string, []int64) {
+func getInfo(console string, files []string) ([]string, []int) {
 	directories := []string{}
 	dir_pointer := &directories 
-	timeModified := []int64{}
+	timeModified := []int{}
 	time_pointer := &timeModified
 	for _, save := range files {
 		fileInfo, err := os.Stat(save)
@@ -345,7 +345,7 @@ func getInfo(console string, files []string) ([]string, []int64) {
 			log.Fatal(err.Error())
 		}
 		*dir_pointer = append(*dir_pointer, save)
-		*time_pointer = append(*time_pointer, modTime.Unix())
+		*time_pointer = append(*time_pointer, int(modTime.Unix()))
 	}
 	return directories, timeModified
 }
@@ -386,6 +386,8 @@ func saveSearch() {
 
 	//fmt.Println("doing postsaves, current elapsed time is,", time.Since(start))
 
+	flushSaves("Desktop")
+
 	postSaves("Desktop", "retro", retro_dirs, retro_time)
 	postSaves("Desktop", "wii", wii_dirs, wii_time)
 	postSaves("Desktop", "psp", psp_dirs, psp_time)
@@ -399,7 +401,20 @@ func saveSearch() {
 	*progressPointer = 1
 }
 
-func postSaves(device string, console string, dirs []string, timemods []int64) {
+func flushSaves(device string) {
+	ctx := context.Background()
+	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
+
+	resp, err := deleteLocal(ctx, client, device)
+
+	if err != nil {
+		log.Println("json.Compact:", err)
+	}
+
+	_ = resp
+}
+
+func postSaves(device string, console string, dirs []string, timemods []int) {
 	ctx := context.Background()
 	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
 
