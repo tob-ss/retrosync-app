@@ -37,7 +37,11 @@ func (a *App) startup(ctx context.Context) {
 
 // Greet returns a greeting for the given name
 func (a *App) StartScan() {
-	saveSearch()
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println(err)
+	}
+	saveSearch(homeDir)
 }
 
 var progress float64
@@ -186,8 +190,6 @@ func consoleSearch(dir string) (map[string]string) {
 	*/
 
 	//var x float64
-
-	*progressPointer = 0.25
 
     err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		//x += 1
@@ -350,7 +352,7 @@ func getInfo(console string, files []string) ([]string, []int) {
 	return directories, timeModified
 }
 
-func saveSearch() {
+func saveSearch(dir string) {
 
 	start := time.Now()
 
@@ -358,7 +360,9 @@ func saveSearch() {
 
 	fmt.Println("doing consoleSearch, current elapsed time is,", time.Since(start))
 
-	consoleFolders := consoleSearch("/")
+	consoleFolders := consoleSearch(dir)
+
+	*progressPointer = 0.25
 
 	// support for custom saves
 	// support for user to select a folder to do a custom search
@@ -369,6 +373,8 @@ func saveSearch() {
 	psp := searchResolver("ppsspp", consoleFolders)
 	ps3 := searchResolver("rpcs3", consoleFolders)
 	n3ds := searchResolver("azahar", consoleFolders)
+
+	*progressPointer = 0.5
 
 	// custom := searchResolver("custom", consoleFolders)
 	// general idea is that we want to prompt the user to pick the folder they want to use, then we call list folders on that path
@@ -382,7 +388,7 @@ func saveSearch() {
 	fmt.Println("the n3ds variable is:", n3ds)
 	n3ds_dirs, n3ds_time := getInfo("n3ds", n3ds)
 
-	
+	*progressPointer = 0.75
 
 	//fmt.Println("doing postsaves, current elapsed time is,", time.Since(start))
 
@@ -433,11 +439,6 @@ func postSaves(device string, console string, dirs []string, timemods []int) {
 	//n := rand.Intn(30)
 
 	//time.Sleep(time.Duration(n)*time.Second)
-	
-	*progressPointer += 0.06
-
-	fmt.Printf("Progress is now", progress)
-	
 }
 
 /*var (
