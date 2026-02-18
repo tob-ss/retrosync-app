@@ -427,7 +427,8 @@ func flushSaves(device string) {
 }
 
 func postSaves(device string, console string, dirs []string, timemods []int) {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 300 * time.Second)
+	defer cancel()
 	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
 
 	resp, err := createSaves(ctx, client, device, console, dirs, timemods)
