@@ -394,10 +394,16 @@ func saveSearch(dir string) {
 
 	flushSaves("Desktop")
 
+	*progressPointer = 0.79
+
 	postSaves("Desktop", "retro", retro_dirs, retro_time)
+	*progressPointer = 0.83
 	postSaves("Desktop", "wii", wii_dirs, wii_time)
+	*progressPointer = 0.87
 	postSaves("Desktop", "psp", psp_dirs, psp_time)
+	*progressPointer = 0.91
 	postSaves("Desktop", "ps3", ps3_dirs, ps3_time)
+	*progressPointer = 0.95
 	fmt.Println("the n3ds directory list is:", n3ds_dirs)
 	postSaves("Desktop", "n3ds", n3ds_dirs, n3ds_time)
 
