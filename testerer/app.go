@@ -411,6 +411,8 @@ func saveSearch(dir string) {
 	fmt.Println(elapsed)
 
 	*progressPointer = 1
+
+	quickScan("Desktop", 420)
 }
 
 func flushSaves(device string) {

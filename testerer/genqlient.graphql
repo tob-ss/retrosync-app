@@ -12,3 +12,9 @@ mutation deleteLocal($device: String!) {
     Device
   }
 }
+
+query getPaths($device: String!, $userID: Int!) {
+  getPaths(Device: $device, UserID: $userID) {
+    Paths
+  }
+}

@@ -29,6 +29,10 @@ type DeviceName {
   Device: String!
 }
 
+type Paths {
+  Paths: [String!]
+}
+
 input PostDeviceName {
   Device: String!
 }
@@ -43,4 +47,8 @@ input PostSaves {
 type Mutation {
   createSaves(input: PostSaves!): Post!
   deleteLocal(input: PostDeviceName!): DeviceName!
+}
+
+type Query {
+  getPaths(Device: String!, UserID: Int!): Paths!
 }

@@ -36,6 +36,18 @@ type __deleteLocalInput struct {
 // GetDevice returns __deleteLocalInput.Device, and is useful for accessing the field via an interface.
 func (v *__deleteLocalInput) GetDevice() string { return v.Device }
 
+// __getPathsInput is used internally by genqlient
+type __getPathsInput struct {
+	Device string `json:"device"`
+	UserID int    `json:"userID"`
+}
+
+// GetDevice returns __getPathsInput.Device, and is useful for accessing the field via an interface.
+func (v *__getPathsInput) GetDevice() string { return v.Device }
+
+// GetUserID returns __getPathsInput.UserID, and is useful for accessing the field via an interface.
+func (v *__getPathsInput) GetUserID() int { return v.UserID }
+
 // createSavesCreateSavesPost includes the requested fields of the GraphQL type Post.
 type createSavesCreateSavesPost struct {
 	Device      string   `json:"Device"`
@@ -79,6 +91,22 @@ type deleteLocalResponse struct {
 
 // GetDeleteLocal returns deleteLocalResponse.DeleteLocal, and is useful for accessing the field via an interface.
 func (v *deleteLocalResponse) GetDeleteLocal() deleteLocalDeleteLocalDeviceName { return v.DeleteLocal }
+
+// getPathsGetPaths includes the requested fields of the GraphQL type Paths.
+type getPathsGetPaths struct {
+	Paths []string `json:"Paths"`
+}
+
+// GetPaths returns getPathsGetPaths.Paths, and is useful for accessing the field via an interface.
+func (v *getPathsGetPaths) GetPaths() []string { return v.Paths }
+
+// getPathsResponse is returned by getPaths on success.
+type getPathsResponse struct {
+	GetPaths getPathsGetPaths `json:"getPaths"`
+}
+
+// GetGetPaths returns getPathsResponse.GetPaths, and is useful for accessing the field via an interface.
+func (v *getPathsResponse) GetGetPaths() getPathsGetPaths { return v.GetPaths }
 
 // The mutation executed by createSaves.
 const createSaves_Operation = `
@@ -146,6 +174,42 @@ func deleteLocal(
 	}
 
 	data_ = &deleteLocalResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by getPaths.
+const getPaths_Operation = `
+query getPaths ($device: String!, $userID: Int!) {
+	getPaths(Device: $device, UserID: $userID) {
+		Paths
+	}
+}
+`
+
+func getPaths(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	device string,
+	userID int,
+) (data_ *getPathsResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "getPaths",
+		Query:  getPaths_Operation,
+		Variables: &__getPathsInput{
+			Device: device,
+			UserID: userID,
+		},
+	}
+
+	data_ = &getPathsResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
