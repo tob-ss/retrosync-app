@@ -25,12 +25,26 @@ type Post {
   Timemod: [Int!]
 }
 
+type PostTime {
+  Device: String!
+  UserID: Int!
+  Path: String!
+  TimeMod: Int!
+}
+
 type DeviceName {
   Device: String!
 }
 
 type Paths {
   Paths: [String!]
+}
+
+input UpdateTime {
+  Device: String!
+  UserID: Int!
+  Path: String!
+  TimeMod: Int!
 }
 
 input PostDeviceName {
@@ -47,6 +61,7 @@ input PostSaves {
 type Mutation {
   createSaves(input: PostSaves!): Post!
   deleteLocal(input: PostDeviceName!): DeviceName!
+  updateTime(input: UpdateTime!): PostTime!
 }
 
 type Query {

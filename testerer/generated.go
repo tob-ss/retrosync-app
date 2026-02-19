@@ -48,6 +48,26 @@ func (v *__getPathsInput) GetDevice() string { return v.Device }
 // GetUserID returns __getPathsInput.UserID, and is useful for accessing the field via an interface.
 func (v *__getPathsInput) GetUserID() int { return v.UserID }
 
+// __updateTimeInput is used internally by genqlient
+type __updateTimeInput struct {
+	Device  string `json:"device"`
+	UserID  int    `json:"userID"`
+	Path    string `json:"path"`
+	Timemod int    `json:"timemod"`
+}
+
+// GetDevice returns __updateTimeInput.Device, and is useful for accessing the field via an interface.
+func (v *__updateTimeInput) GetDevice() string { return v.Device }
+
+// GetUserID returns __updateTimeInput.UserID, and is useful for accessing the field via an interface.
+func (v *__updateTimeInput) GetUserID() int { return v.UserID }
+
+// GetPath returns __updateTimeInput.Path, and is useful for accessing the field via an interface.
+func (v *__updateTimeInput) GetPath() string { return v.Path }
+
+// GetTimemod returns __updateTimeInput.Timemod, and is useful for accessing the field via an interface.
+func (v *__updateTimeInput) GetTimemod() int { return v.Timemod }
+
 // createSavesCreateSavesPost includes the requested fields of the GraphQL type Post.
 type createSavesCreateSavesPost struct {
 	Device      string   `json:"Device"`
@@ -107,6 +127,34 @@ type getPathsResponse struct {
 
 // GetGetPaths returns getPathsResponse.GetPaths, and is useful for accessing the field via an interface.
 func (v *getPathsResponse) GetGetPaths() getPathsGetPaths { return v.GetPaths }
+
+// updateTimeResponse is returned by updateTime on success.
+type updateTimeResponse struct {
+	UpdateTime updateTimeUpdateTimePostTime `json:"updateTime"`
+}
+
+// GetUpdateTime returns updateTimeResponse.UpdateTime, and is useful for accessing the field via an interface.
+func (v *updateTimeResponse) GetUpdateTime() updateTimeUpdateTimePostTime { return v.UpdateTime }
+
+// updateTimeUpdateTimePostTime includes the requested fields of the GraphQL type PostTime.
+type updateTimeUpdateTimePostTime struct {
+	Device  string `json:"Device"`
+	UserID  int    `json:"UserID"`
+	Path    string `json:"Path"`
+	TimeMod int    `json:"TimeMod"`
+}
+
+// GetDevice returns updateTimeUpdateTimePostTime.Device, and is useful for accessing the field via an interface.
+func (v *updateTimeUpdateTimePostTime) GetDevice() string { return v.Device }
+
+// GetUserID returns updateTimeUpdateTimePostTime.UserID, and is useful for accessing the field via an interface.
+func (v *updateTimeUpdateTimePostTime) GetUserID() int { return v.UserID }
+
+// GetPath returns updateTimeUpdateTimePostTime.Path, and is useful for accessing the field via an interface.
+func (v *updateTimeUpdateTimePostTime) GetPath() string { return v.Path }
+
+// GetTimeMod returns updateTimeUpdateTimePostTime.TimeMod, and is useful for accessing the field via an interface.
+func (v *updateTimeUpdateTimePostTime) GetTimeMod() int { return v.TimeMod }
 
 // The mutation executed by createSaves.
 const createSaves_Operation = `
@@ -210,6 +258,49 @@ func getPaths(
 	}
 
 	data_ = &getPathsResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The mutation executed by updateTime.
+const updateTime_Operation = `
+mutation updateTime ($device: String!, $userID: Int!, $path: String!, $timemod: Int!) {
+	updateTime(input: {Device:$device,UserID:$userID,Path:$path,TimeMod:$timemod}) {
+		Device
+		UserID
+		Path
+		TimeMod
+	}
+}
+`
+
+func updateTime(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	device string,
+	userID int,
+	path string,
+	timemod int,
+) (data_ *updateTimeResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "updateTime",
+		Query:  updateTime_Operation,
+		Variables: &__updateTimeInput{
+			Device:  device,
+			UserID:  userID,
+			Path:    path,
+			Timemod: timemod,
+		},
+	}
+
+	data_ = &updateTimeResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(

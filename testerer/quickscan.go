@@ -2,47 +2,75 @@ package main
 
 import (
 	"context"
-	"time"
-	"log"
 	"fmt"
+	"io/fs"
+	"log"
 	"net/http"
-	"github.com/Khan/genqlient/graphql"
 	"os"
 	"path/filepath"
-	"io/fs"
+	"time"
+
+	"github.com/Khan/genqlient/graphql"
 )
 
 func quickScan(device string, userID int) {
 	for {
-		time.Sleep(10 * time.Second)
-		ctx, cancel := context.WithTimeout(context.Background(), 30 * time.Second)
-		defer cancel()
-		client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
-
-		resp, err := getPaths(ctx, client, device, userID)
-
-		if err != nil {
-			log.Println("json.Compact:", err)
-		}
-
-		fmt.Println(resp)
-
-		updated := make(map[string]int)
-
-		for _, path := range resp.GetPaths.Paths {
-			dir, timemod, exists := handleFiles(path)
-			if !exists {
-				// send to API server to delete
-				fmt.Println("path no longer exists!", dir)
-			} else {
-				updated[dir] = timemod
-				fmt.Println("adding dir and timemod to map to be sent to api:", dir, timemod)
-			}
-		}
-
-		// send map with dirs and timemods to insert/update quickscan table
-		fmt.Println("sending map of dirs and timemods:", updated)
+		postToDB(device, userID)
 	}
+}
+
+func postToDB(device string, userID int) {
+	time.Sleep(10 * time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+
+	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
+
+	resp, err := getPaths(ctx, client, device, userID)
+
+	if err != nil {
+		log.Println("json.Compact:", err)
+	}
+	defer cancel()
+
+	fmt.Println(resp)
+
+	updated := make(map[string]int)
+
+	for _, path := range resp.GetPaths.Paths {
+		dir, timemod, exists := handleFiles(path)
+		if !exists {
+			// send to API server to delete
+			fmt.Println("path no longer exists!", dir)
+		} else {
+			updated[dir] = timemod
+			fmt.Println("adding dir and timemod to map to be sent to api:", dir, timemod)
+		}
+	}
+
+	// send map with dirs and timemods to insert/update quickscan table
+	fmt.Println("sending map of dirs and timemods:", updated)
+	for path, timeMod := range updated {
+		// send path and timeMod in function
+		postTime(path, timeMod, device, userID)
+	}
+}
+
+func postTime(path string, timeMod int, device string, userID int) {
+	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
+	defer cancel()
+	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
+
+	resp, err := updateTime(ctx, client, device, userID, path, timeMod)
+
+	if err != nil {
+		fmt.Println("Posted metadata but got error...", err)
+
+	} else {
+		fmt.Println("Successfully posted metadata with no errors!")
+	}
+
+	_ = resp
+
 }
 
 func handleFiles(path string) (string, int, bool) {
@@ -88,9 +116,9 @@ func searchFolder(dir string) []int {
 		fmt.Println("Unexpected error:", err)
 	}
 	return timeSlice
-} 
+}
 
-func getTimemod(timeMods []int) (int) {
+func getTimemod(timeMods []int) int {
 	biggest := timeMods[0]
 
 	for _, v := range timeMods {
