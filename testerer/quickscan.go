@@ -11,41 +11,31 @@ import (
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
-	"github.com/robfig/cron/v3"
+	//"github.com/robfig/cron/v3"
 )
 
-var background bool
-var backPoint *bool = &background
-
 func quickScan(device string, userID int, scanPath string) error {
-	c := cron.New()
-
-	c.AddFunc("@every 1m", func() { startFullScan(scanPath) })
-
-	c.Start()
-
-	*backPoint = true
-
-	for background {
+	for {
+		x := 0
+		x += 1
 		err := postToDB(device, userID)
 
 		if err != nil {
 			//fmt.Print("Unexpected error", err)
 			return err
 		}
+		// 150 loops should take at least 25 mins
+		if (x%10 == 0) && (x/10 >= 1) {
+			startFullScan(scanPath)
+		}
 	}
-
-	return nil
 }
 
 func startFullScan(scanPath string) {
 	fmt.Println("Starting full scan!")
 
-	*backPoint = false
-
 	fullScan(scanPath)
 
-	*backPoint = true
 }
 
 func postToDB(device string, userID int) error {
