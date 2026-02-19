@@ -14,6 +14,7 @@ import (
 
 func quickScan(device string, userID int) {
 	for {
+		time.Sleep(10 * time.Second)
 		ctx, cancel := context.WithTimeout(context.Background(), 30 * time.Second)
 		defer cancel()
 		client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
