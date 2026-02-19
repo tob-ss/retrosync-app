@@ -22,6 +22,8 @@ func quickScan(device string, userID int, scanPath string) error {
 
 	c.AddFunc("@every 1m", func() { startFullScan(scanPath) })
 
+	c.Start()
+
 	*backPoint = true
 
 	for background {
