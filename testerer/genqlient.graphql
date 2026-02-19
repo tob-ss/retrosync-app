@@ -16,14 +16,13 @@ mutation deleteLocal($device: String!) {
 query getPaths($device: String!, $userID: Int!) {
   getPaths(Device: $device, UserID: $userID) {
     Paths
+    IDs
   }
 }
 
-mutation updateTime($device: String!, $userID: Int!, $path: String!, $timemod: Int!) {
-  updateTime(input: {Device: $device, UserID: $userID, Path: $path, TimeMod: $timemod}) {
-    Device
-    UserID
-    Path
+mutation updateTime($id: Int!, $timemod: Int!) {
+  updateTime(input: {ID: $id, TimeMod: $timemod}) {
+    ID
     TimeMod
   }
 }

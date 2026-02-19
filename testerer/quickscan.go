@@ -13,13 +13,18 @@ import (
 	"github.com/Khan/genqlient/graphql"
 )
 
-func quickScan(device string, userID int) {
+func quickScan(device string, userID int) error {
 	for {
-		postToDB(device, userID)
+		err := postToDB(device, userID)
+
+		if err != nil {
+			//fmt.Print("Unexpected error", err)
+			return err
+		}
 	}
 }
 
-func postToDB(device string, userID int) {
+func postToDB(device string, userID int) error {
 	time.Sleep(10 * time.Second)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 
@@ -34,33 +39,47 @@ func postToDB(device string, userID int) {
 
 	fmt.Println(resp)
 
-	updated := make(map[string]int)
+	updated := make(map[int]int)
 
-	for _, path := range resp.GetPaths.Paths {
+	id_paths, err := joinLists(resp.GetPaths.Paths, resp.GetPaths.IDs)
+
+	if err != nil {
+		fmt.Println("failed to join lists!", err)
+		return err
+	}
+
+	for id, path := range id_paths {
 		dir, timemod, exists := handleFiles(path)
 		if !exists {
 			// send to API server to delete
 			fmt.Println("path no longer exists!", dir)
 		} else {
-			updated[dir] = timemod
-			fmt.Println("adding dir and timemod to map to be sent to api:", dir, timemod)
+			updated[id] = timemod
+			fmt.Println("adding id and timemod to map to be sent to api:", id, timemod)
 		}
 	}
 
 	// send map with dirs and timemods to insert/update quickscan table
 	fmt.Println("sending map of dirs and timemods:", updated)
-	for path, timeMod := range updated {
+	for id, timeMod := range updated {
 		// send path and timeMod in function
-		postTime(path, timeMod, device, userID)
+		postTime(id, timeMod, ctx, client)
 	}
+	return nil
 }
 
-func postTime(path string, timeMod int, device string, userID int) {
-	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
-	defer cancel()
-	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
+func joinLists(paths []string, ids []int) (map[int]string, error) {
+	dir_timemod := make(map[int]string)
 
-	resp, err := updateTime(ctx, client, device, userID, path, timeMod)
+	for idx := range paths {
+		dir_timemod[ids[idx]] = paths[idx]
+	}
+	return dir_timemod, nil
+}
+
+func postTime(id int, timeMod int, ctx context.Context, client graphql.Client) {
+
+	resp, err := updateTime(ctx, client, id, timeMod)
 
 	if err != nil {
 		fmt.Println("Posted metadata but got error...", err)

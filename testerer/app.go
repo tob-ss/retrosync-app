@@ -6,16 +6,18 @@ import (
 	"io/fs"
 	"log"
 	"path/filepath"
+
 	//"strings"
 	"os"
 	//"io"
 	"time"
 	//"sync"
 	//"regexp"
-	"github.com/Khan/genqlient/graphql"
+	"math"
 	"net/http"
 	"strings"
-	"math"
+
+	"github.com/Khan/genqlient/graphql"
 	//"math/rand"
 )
 
@@ -49,35 +51,35 @@ var progressPointer *float64 = &progress
 
 func (a *App) CheckProgress() float64 {
 	rounded := math.Round((progress * 100))
-	
+
 	return rounded
 }
 
 // need a variant of listfiles/listfolders that takes in a specific parameter first e.g. retrosync or emulator name, so it can do a quick search
 
-// will keep code for full search 
+// will keep code for full search
 
 // when user starts scan; it first does the faster search with the parameters, then there will be an prompt or something that the user can click on which will initiate a full scan for saves (or the user can choose where the save is)
 
 // also add some error handling/message in case no games are found
 
-func searchResolver(console string, consoleFolders map[string]string) ([]string) {
+func searchResolver(console string, consoleFolders map[string]string) []string {
 	var results []string
 	resultsPointer := &results
-	fmt.Println("Parsing", console,"folders!")
+	fmt.Println("Parsing", console, "folders!")
 	start := time.Now()
 	for key, value := range consoleFolders {
 		if value == "retroarch" && console == "retroarch" {
-				listFiles, err := listFiles(key)
-				if err != nil {
-					log.Fatal(err)
-				}
-			
-				for _, path := range listFiles {
-					*resultsPointer = append(*resultsPointer, path)
-				}
+			listFiles, err := listFiles(key)
+			if err != nil {
+				log.Fatal(err)
 			}
-		
+
+			for _, path := range listFiles {
+				*resultsPointer = append(*resultsPointer, path)
+			}
+		}
+
 		if value == console && console != "retroarch" {
 			for _, path := range listFolders(key, console, true) {
 				*resultsPointer = append(*resultsPointer, path)
@@ -85,11 +87,10 @@ func searchResolver(console string, consoleFolders map[string]string) ([]string)
 		}
 	}
 	elapsed := time.Since(start)
-	fmt.Println("Finished", console,"folders!", elapsed)
-	
+	fmt.Println("Finished", console, "folders!", elapsed)
+
 	return results
 }
-
 
 /*func searchResolver(console string) ([]string) {
 	// switch case for each console; within each one; they'll call listfiles/listfolders and use different dirs depending on the console and it will return whatever listfiles/listfolders return
@@ -167,8 +168,7 @@ func searchResolver(console string, consoleFolders map[string]string) ([]string)
 	return nil
 }*/
 
-
-func consoleSearch(dir string) (map[string]string) {
+func consoleSearch(dir string) map[string]string {
 	fmt.Println("Starting console search")
 	start := time.Now()
 	check := ""
@@ -178,23 +178,23 @@ func consoleSearch(dir string) (map[string]string) {
 	//var dirSize float64
 
 	/*err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
-       	dirSize += 1
-		return nil
-	   	})
-    if err != nil {
-		fmt.Println(err)
-    }
+	       	dirSize += 1
+			return nil
+		   	})
+	    if err != nil {
+			fmt.Println(err)
+	    }
 
-	fmt.Println("Directory size is", dirSize)
+		fmt.Println("Directory size is", dirSize)
 
 	*/
 
 	//var x float64
 
-    err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		//x += 1
 		//*progressPointer = (0.7 * x) / dirSize
-       	if d.IsDir() {
+		if d.IsDir() {
 			base := strings.ToLower(filepath.Base(path))
 			check = "retroarch"
 			if strings.Contains(base, check) {
@@ -218,45 +218,45 @@ func consoleSearch(dir string) (map[string]string) {
 			}
 		}
 		return nil
-	   	})
-    if err != nil {
+	})
+	if err != nil {
 		fmt.Println(err)
-    }
+	}
 
 	elapsed := time.Since(start)
 	fmt.Println("Finished console search, time elapsed", elapsed)
 
-    return m
+	return m
 }
 
 func listFiles(dir string) ([]string, error) {
 	//fmt.Println("Starting listFiles search for", dir)
 	//start := time.Now()
-    var files []string
+	var files []string
 
 	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 
 		if filepath.Ext(path) == ".srm" || filepath.Ext(path) == ".dsv" || filepath.Ext(path) == ".ps2" || filepath.Ext(path) == ".gci" {
-          	files = append(files, path)
-			}
+			files = append(files, path)
+		}
 
-        /*if d.IsDir() {
-            return nil
-        }*/
+		/*if d.IsDir() {
+		    return nil
+		}*/
 
 		//files = append(files, path)
 
 		//q <- path
 
-        return nil
-    })
+		return nil
+	})
 
 	_ = err
 
 	//elapsed := time.Since(start)
 	//fmt.Println("Finished", dir, "time elapsed", elapsed)
 
-    return files, nil
+	return files, nil
 }
 
 func listFolders(dir string, console string, quick bool) []string {
@@ -269,43 +269,43 @@ func listFolders(dir string, console string, quick bool) []string {
 			if d.IsDir() {
 				if filepath.Base(path) == "title" && console == "dolphin" {
 					folders = append(folders, path)
-					
+
 				} else if filepath.Base(path) == "SAVEDATA" && console == "ppsspp" {
 					folders = append(folders, path)
-					
+
 				} else if filepath.Base(path) == "savedata" && console == "rpcs3" {
 					folders = append(folders, path)
-					
+
 				} else if filepath.Base(path) == "title" && console == "azahar" {
 					folders = append(folders, path)
-					
+
 				}
 			}
-			 
+
 			return nil
-    	})
-		_ = err 
+		})
+		_ = err
 	} else {
 		err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 			if d.IsDir() {
-					if filepath.Base(path) == "title" && console == "wii" {
-						folders = append(folders, path)
-						
-					} else if filepath.Base(path) == "SAVEDATA" && console == "psp" {
-						folders = append(folders, path)
-						
-					} else if filepath.Base(path) == "savedata" && console == "ps3" {
-						folders = append(folders, path)
-						
-					} else if filepath.Base(path) == "title" && console == "n3ds" {
-						folders = append(folders, path)
-						
-					}
-			}  
+				if filepath.Base(path) == "title" && console == "wii" {
+					folders = append(folders, path)
+
+				} else if filepath.Base(path) == "SAVEDATA" && console == "psp" {
+					folders = append(folders, path)
+
+				} else if filepath.Base(path) == "savedata" && console == "ps3" {
+					folders = append(folders, path)
+
+				} else if filepath.Base(path) == "title" && console == "n3ds" {
+					folders = append(folders, path)
+
+				}
+			}
 			_ = err
 			return nil
-    	})
-		_ = err 
+		})
+		_ = err
 	}
 
 	parsedFolders := searchFolders(folders)
@@ -313,14 +313,14 @@ func listFolders(dir string, console string, quick bool) []string {
 	//elapsed := time.Since(start)
 	fmt.Println("Finished", dir)
 
-    return parsedFolders
+	return parsedFolders
 }
 
 func searchFolders(dirs []string) []string {
-    var files []string
+	var files []string
 
 	for _, dir := range dirs {
-		
+
 		err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 			if !d.IsDir() {
 				files = append(files, path)
@@ -332,12 +332,12 @@ func searchFolders(dirs []string) []string {
 		}
 	}
 
-    return files
+	return files
 }
 
 func getInfo(console string, files []string) ([]string, []int) {
 	directories := []string{}
-	dir_pointer := &directories 
+	dir_pointer := &directories
 	timeModified := []int{}
 	time_pointer := &timeModified
 	for _, save := range files {
@@ -412,7 +412,11 @@ func saveSearch(dir string) {
 
 	*progressPointer = 1
 
-	quickScan("Desktop", 420)
+	err := quickScan("Desktop", 420)
+
+	if err != nil {
+		fmt.Println("Unexpected error:", err)
+	}
 }
 
 func flushSaves(device string) {
@@ -429,7 +433,7 @@ func flushSaves(device string) {
 }
 
 func postSaves(device string, console string, dirs []string, timemods []int) {
-	ctx, cancel := context.WithTimeout(context.Background(), 300 * time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
 	defer cancel()
 	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
 
@@ -467,7 +471,7 @@ func processFiles(ctx context.Context, files []string) {
           		//files = append(files, path)
 			fmt.Println(path)
 			//}
-            
+
         case <-ctx.Done():
             return
         }
@@ -477,7 +481,7 @@ func processFiles(ctx context.Context, files []string) {
 func walk(dir string) error {
     err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 
-		
+
         if err != nil {
             return err
         }
@@ -485,7 +489,7 @@ func walk(dir string) error {
         /*if d.IsDir() {
             return nil
         }
-		
+
 		fmt.Println(path)
 
         q <- path
@@ -578,7 +582,7 @@ func scaning_recursive(dir_path string) ([]string, []string) {
 		}
 
 	})
-	
+
 	return folders, files
 
 }
@@ -645,12 +649,12 @@ func scan_recursive(dir_path string, ignore []string) ([]string, []string) {
 			}
 		}
 
-		
+
 
 		return nil
 	})
 
-	
+
 
 	return folders, files
 }

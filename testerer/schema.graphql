@@ -26,9 +26,7 @@ type Post {
 }
 
 type PostTime {
-  Device: String!
-  UserID: Int!
-  Path: String!
+  ID: Int!
   TimeMod: Int!
 }
 
@@ -37,13 +35,12 @@ type DeviceName {
 }
 
 type Paths {
+  IDs: [Int!]
   Paths: [String!]
 }
 
 input UpdateTime {
-  Device: String!
-  UserID: Int!
-  Path: String!
+  ID: Int!
   TimeMod: Int!
 }
 
