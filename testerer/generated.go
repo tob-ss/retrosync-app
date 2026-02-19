@@ -28,6 +28,14 @@ func (v *__createSavesInput) GetDirectories() []string { return v.Directories }
 // GetTimemod returns __createSavesInput.Timemod, and is useful for accessing the field via an interface.
 func (v *__createSavesInput) GetTimemod() []int { return v.Timemod }
 
+// __deleteLocalIDInput is used internally by genqlient
+type __deleteLocalIDInput struct {
+	Id int `json:"id"`
+}
+
+// GetId returns __deleteLocalIDInput.Id, and is useful for accessing the field via an interface.
+func (v *__deleteLocalIDInput) GetId() int { return v.Id }
+
 // __deleteLocalInput is used internally by genqlient
 type __deleteLocalInput struct {
 	Device string `json:"device"`
@@ -95,6 +103,24 @@ type deleteLocalDeleteLocalDeviceName struct {
 
 // GetDevice returns deleteLocalDeleteLocalDeviceName.Device, and is useful for accessing the field via an interface.
 func (v *deleteLocalDeleteLocalDeviceName) GetDevice() string { return v.Device }
+
+// deleteLocalIDDeleteLocalIDUseID includes the requested fields of the GraphQL type UseID.
+type deleteLocalIDDeleteLocalIDUseID struct {
+	ID int `json:"ID"`
+}
+
+// GetID returns deleteLocalIDDeleteLocalIDUseID.ID, and is useful for accessing the field via an interface.
+func (v *deleteLocalIDDeleteLocalIDUseID) GetID() int { return v.ID }
+
+// deleteLocalIDResponse is returned by deleteLocalID on success.
+type deleteLocalIDResponse struct {
+	DeleteLocalID deleteLocalIDDeleteLocalIDUseID `json:"deleteLocalID"`
+}
+
+// GetDeleteLocalID returns deleteLocalIDResponse.DeleteLocalID, and is useful for accessing the field via an interface.
+func (v *deleteLocalIDResponse) GetDeleteLocalID() deleteLocalIDDeleteLocalIDUseID {
+	return v.DeleteLocalID
+}
 
 // deleteLocalResponse is returned by deleteLocal on success.
 type deleteLocalResponse struct {
@@ -210,6 +236,40 @@ func deleteLocal(
 	}
 
 	data_ = &deleteLocalResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The mutation executed by deleteLocalID.
+const deleteLocalID_Operation = `
+mutation deleteLocalID ($id: Int!) {
+	deleteLocalID(input: {ID:$id}) {
+		ID
+	}
+}
+`
+
+func deleteLocalID(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	id int,
+) (data_ *deleteLocalIDResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "deleteLocalID",
+		Query:  deleteLocalID_Operation,
+		Variables: &__deleteLocalIDInput{
+			Id: id,
+		},
+	}
+
+	data_ = &deleteLocalIDResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(

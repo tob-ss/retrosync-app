@@ -412,7 +412,7 @@ func saveSearch(dir string) {
 
 	*progressPointer = 1
 
-	err := quickScan("Desktop", 420)
+	err := quickScan("Desktop", 420, dir)
 
 	if err != nil {
 		fmt.Println("Unexpected error:", err)

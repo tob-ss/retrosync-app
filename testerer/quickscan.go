@@ -11,10 +11,20 @@ import (
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
+	"github.com/robfig/cron/v3"
 )
 
-func quickScan(device string, userID int) error {
-	for {
+var background bool
+var backPoint *bool = &background
+
+func quickScan(device string, userID int, scanPath string) error {
+	c := cron.New()
+
+	c.AddFunc("@every 1m", func() { startFullScan(scanPath) })
+
+	*backPoint = true
+
+	for background {
 		err := postToDB(device, userID)
 
 		if err != nil {
@@ -22,6 +32,18 @@ func quickScan(device string, userID int) error {
 			return err
 		}
 	}
+
+	return nil
+}
+
+func startFullScan(scanPath string) {
+	fmt.Println("Starting full scan!")
+
+	*backPoint = false
+
+	fullScan(scanPath)
+
+	*backPoint = true
 }
 
 func postToDB(device string, userID int) error {
@@ -53,6 +75,7 @@ func postToDB(device string, userID int) error {
 		if !exists {
 			// send to API server to delete
 			fmt.Println("path no longer exists!", dir)
+
 		} else {
 			updated[id] = timemod
 			fmt.Println("adding id and timemod to map to be sent to api:", id, timemod)
@@ -66,6 +89,19 @@ func postToDB(device string, userID int) error {
 		postTime(id, timeMod, ctx, client)
 	}
 	return nil
+}
+
+func deleteID(id int, ctx context.Context, client graphql.Client) {
+	resp, err := deleteLocalID(ctx, client, id)
+
+	if err != nil {
+		fmt.Println("Tried to delete metadata but got error...", err)
+
+	} else {
+		fmt.Println("Successfully deleted metadata with no errors!")
+	}
+
+	_ = resp
 }
 
 func joinLists(paths []string, ids []int) (map[int]string, error) {

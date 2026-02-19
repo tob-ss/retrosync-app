@@ -26,3 +26,9 @@ mutation updateTime($id: Int!, $timemod: Int!) {
     TimeMod
   }
 }
+
+mutation deleteLocalID($id: Int!) {
+  deleteLocalID(input:{ID: $id}) {
+    ID
+  }
+}
