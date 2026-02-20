@@ -17,7 +17,7 @@ import (
 func quickScan(device string, userID int, scanPath string) error {
 	x := 0
 	for {
-		x += 1
+
 		err := postToDB(device, userID)
 
 		if err != nil {
@@ -25,7 +25,8 @@ func quickScan(device string, userID int, scanPath string) error {
 			return err
 		}
 		// 150 loops should take at least 25 mins
-		if (x%2 == 0) && (x/2 >= 1) {
+		x += 1
+		if (x%150 == 0) && (x/150 >= 1) {
 			startFullScan(scanPath)
 		}
 	}

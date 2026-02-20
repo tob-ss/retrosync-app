@@ -39,10 +39,14 @@ func (v *__deleteLocalIDInput) GetId() int { return v.Id }
 // __deleteLocalInput is used internally by genqlient
 type __deleteLocalInput struct {
 	Device string `json:"device"`
+	UserID int    `json:"userID"`
 }
 
 // GetDevice returns __deleteLocalInput.Device, and is useful for accessing the field via an interface.
 func (v *__deleteLocalInput) GetDevice() string { return v.Device }
+
+// GetUserID returns __deleteLocalInput.UserID, and is useful for accessing the field via an interface.
+func (v *__deleteLocalInput) GetUserID() int { return v.UserID }
 
 // __getPathsInput is used internally by genqlient
 type __getPathsInput struct {
@@ -96,13 +100,17 @@ type createSavesResponse struct {
 // GetCreateSaves returns createSavesResponse.CreateSaves, and is useful for accessing the field via an interface.
 func (v *createSavesResponse) GetCreateSaves() createSavesCreateSavesPost { return v.CreateSaves }
 
-// deleteLocalDeleteLocalDeviceName includes the requested fields of the GraphQL type DeviceName.
-type deleteLocalDeleteLocalDeviceName struct {
+// deleteLocalDeleteLocalDeviceUserID includes the requested fields of the GraphQL type DeviceUserID.
+type deleteLocalDeleteLocalDeviceUserID struct {
 	Device string `json:"Device"`
+	UserID int    `json:"UserID"`
 }
 
-// GetDevice returns deleteLocalDeleteLocalDeviceName.Device, and is useful for accessing the field via an interface.
-func (v *deleteLocalDeleteLocalDeviceName) GetDevice() string { return v.Device }
+// GetDevice returns deleteLocalDeleteLocalDeviceUserID.Device, and is useful for accessing the field via an interface.
+func (v *deleteLocalDeleteLocalDeviceUserID) GetDevice() string { return v.Device }
+
+// GetUserID returns deleteLocalDeleteLocalDeviceUserID.UserID, and is useful for accessing the field via an interface.
+func (v *deleteLocalDeleteLocalDeviceUserID) GetUserID() int { return v.UserID }
 
 // deleteLocalIDDeleteLocalIDUseID includes the requested fields of the GraphQL type UseID.
 type deleteLocalIDDeleteLocalIDUseID struct {
@@ -124,11 +132,13 @@ func (v *deleteLocalIDResponse) GetDeleteLocalID() deleteLocalIDDeleteLocalIDUse
 
 // deleteLocalResponse is returned by deleteLocal on success.
 type deleteLocalResponse struct {
-	DeleteLocal deleteLocalDeleteLocalDeviceName `json:"deleteLocal"`
+	DeleteLocal deleteLocalDeleteLocalDeviceUserID `json:"deleteLocal"`
 }
 
 // GetDeleteLocal returns deleteLocalResponse.DeleteLocal, and is useful for accessing the field via an interface.
-func (v *deleteLocalResponse) GetDeleteLocal() deleteLocalDeleteLocalDeviceName { return v.DeleteLocal }
+func (v *deleteLocalResponse) GetDeleteLocal() deleteLocalDeleteLocalDeviceUserID {
+	return v.DeleteLocal
+}
 
 // getPathsGetPaths includes the requested fields of the GraphQL type Paths.
 type getPathsGetPaths struct {
@@ -215,9 +225,10 @@ func createSaves(
 
 // The mutation executed by deleteLocal.
 const deleteLocal_Operation = `
-mutation deleteLocal ($device: String!) {
-	deleteLocal(input: {Device:$device}) {
+mutation deleteLocal ($device: String!, $userID: Int!) {
+	deleteLocal(input: {Device:$device,UserID:$userID}) {
 		Device
+		UserID
 	}
 }
 `
@@ -226,12 +237,14 @@ func deleteLocal(
 	ctx_ context.Context,
 	client_ graphql.Client,
 	device string,
+	userID int,
 ) (data_ *deleteLocalResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "deleteLocal",
 		Query:  deleteLocal_Operation,
 		Variables: &__deleteLocalInput{
 			Device: device,
+			UserID: userID,
 		},
 	}
 

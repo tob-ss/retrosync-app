@@ -392,7 +392,7 @@ func saveSearch(dir string) {
 
 	//fmt.Println("doing postsaves, current elapsed time is,", time.Since(start))
 
-	flushSaves("Desktop")
+	flushSaves("Desktop", 420)
 
 	*progressPointer = 0.79
 
@@ -419,11 +419,11 @@ func saveSearch(dir string) {
 	}
 }
 
-func flushSaves(device string) {
+func flushSaves(device string, userID int) {
 	ctx := context.Background()
 	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
 
-	resp, err := deleteLocal(ctx, client, device)
+	resp, err := deleteLocal(ctx, client, device, userID)
 
 	if err != nil {
 		log.Println("json.Compact:", err)

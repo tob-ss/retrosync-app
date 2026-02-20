@@ -7,9 +7,10 @@ mutation createSaves($device: String!, $console: String!, $directories: [String!
   }
 }
 
-mutation deleteLocal($device: String!) {
-  deleteLocal(input:{Device: $device}) {
+mutation deleteLocal($device: String!, $userID: Int!) {
+  deleteLocal(input:{Device: $device, UserID: $userID}) {
     Device
+    UserID
   }
 }
 

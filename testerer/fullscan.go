@@ -37,8 +37,6 @@ func fullScan(dir string) {
 
 	//fmt.Println("doing postsaves, current elapsed time is,", time.Since(start))
 
-	flushSaves("Desktop")
-
 	postSaves("Desktop", "retro", retro_dirs, retro_time)
 
 	postSaves("Desktop", "wii", wii_dirs, wii_time)
