@@ -68,7 +68,7 @@ func postToDB(device string, userID int) error {
 		if !exists {
 			// send to API server to delete
 			fmt.Println("path no longer exists!", dir)
-
+			deleteID(id, ctx, client)
 		} else {
 			updated[id] = timemod
 			fmt.Println("adding id and timemod to map to be sent to api:", id, timemod)
