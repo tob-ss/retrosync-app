@@ -5,25 +5,27 @@
 
   //  let data: Array<Record<string, any>> = GetSaves();
 
-    let data = $state([])
+    const columns = [
+            {id: "ID", header: "Unique Save Number"},
+            {id: "Game_Name", header: "Game Name"},
+            {id: "Console", header: "Console"},
+            {id: "Device", header: "Current Device"},
+            {id: "Time_Modified", header: "Last Saved"},
+            {id: "Save_Path", header: "Save Location"},
+        ]
 
     GetSaves().then(data => {
         console.log(data);
     });
+
+    let data = $state([]);
 
     (async () => {
         const data = await GetSaves();
         console.log(data);
     });
 
-    const columns = [
-        {id: "ID", header: "Unique Save Number"},
-        {id: "Game_Name", header: "Game Name"},
-        {id: "Console", header: "Console"},
-        {id: "Device", header: "Current Device"},
-        {id: "Time_Modified", header: "Last Saved"},
-        {id: "Save_Path", header: "Save Location"},
-    ]
+    
 
     
 </script>
