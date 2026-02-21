@@ -2,6 +2,20 @@
     import { Grid } from "@svar-ui/svelte-grid";
     import { GetSaves } from '../../wailsjs/go/main/App';
     
+
+    function doSmthn() {
+        GetSaves()
+        .then(response => response.data)
+        .catch(error => error);
+    }
+
+    async function getResponse() {
+        const response = await doSmthn();
+        console.log(response)
+    }
+    
+    getResponse()
+
     let data: Array<Record<string, any>> = GetSaves();
 
     const columns = [
