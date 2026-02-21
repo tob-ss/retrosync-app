@@ -13,19 +13,28 @@ import (
 )
 
 func (a *App) GetSaves() []map[string]interface{} {
+	fmt.Println("Started Get saves function!")
+
 	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
 	defer cancel()
 	client := graphql.NewClient("http://localhost:8080/query", http.DefaultClient)
 
 	userID := 420
 
-	resp, err := getLocalSaves(ctx, client, userID)
+	fmt.Println("Querying the API server!")
 
-	sliceOfSaves := createMaps(resp.GetLocalSaves.IDs, resp.GetLocalSaves.UserIDs, resp.GetLocalSaves.Names, resp.GetLocalSaves.Consoles, resp.GetLocalSaves.Devices, resp.GetLocalSaves.TimeMods, resp.GetLocalSaves.Paths)
+	resp, err := getLocalSaves(ctx, client, userID)
 
 	if err != nil {
 		fmt.Println("failed to get local saves")
+		return nil
 	}
+
+	fmt.Println("Successfully got local saves! Parsing saves...")
+
+	sliceOfSaves := createMaps(resp.GetLocalSaves.IDs, resp.GetLocalSaves.UserIDs, resp.GetLocalSaves.Names, resp.GetLocalSaves.Consoles, resp.GetLocalSaves.Devices, resp.GetLocalSaves.TimeMods, resp.GetLocalSaves.Paths)
+
+	fmt.Println("Saves parsed! Sending Saves to frontend...")
 
 	return sliceOfSaves
 }
