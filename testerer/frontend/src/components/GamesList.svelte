@@ -31,7 +31,7 @@
 
 <div class="h-full w-full">
     <div class="h-full grid grid-cols-3 grid-rows-6 gap-4 text-[#D7D6FC] font-heebo">
-        <div class="col-span-3 row-span-6">
+        <div class="table col-span-3 row-span-6">
         {#await GetSaves()}
             <p>Getting Saves...</p>
         {:then data}
@@ -42,5 +42,8 @@
 </div>
 
 <style>
-
+    .table {
+        --wx-table-header-backgroud: color-mix(in oklab, var(--bg) 80%, transparent);
+        --wx-border: color-mix(in oklab, var(--glass-bg) 80%, rgb(255, 253, 120));
+    }
 </style>
