@@ -36,6 +36,8 @@ func (a *App) GetSaves() []map[string]interface{} {
 
 	fmt.Println("Saves parsed! Sending Saves to frontend...")
 
+	fmt.Println("Here are the saves for debugging reasons", sliceOfSaves)
+
 	return sliceOfSaves
 }
 
