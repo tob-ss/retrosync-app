@@ -46,6 +46,19 @@ func (a *App) StartScan() {
 	saveSearch(homeDir)
 }
 
+func (a *App) StartQuickScan() {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = quickScan("Desktop", 420, homeDir)
+
+	if err != nil {
+		fmt.Println("Unexpected error:", err)
+	}
+}
+
 var progress float64
 var progressPointer *float64 = &progress
 

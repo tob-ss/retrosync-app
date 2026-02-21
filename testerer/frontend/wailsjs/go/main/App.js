@@ -6,6 +6,14 @@ export function CheckProgress() {
   return window['go']['main']['App']['CheckProgress']();
 }
 
+export function GetSaves() {
+  return window['go']['main']['App']['GetSaves']();
+}
+
+export function StartQuickScan() {
+  return window['go']['main']['App']['StartQuickScan']();
+}
+
 export function StartScan() {
   return window['go']['main']['App']['StartScan']();
 }

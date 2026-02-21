@@ -21,6 +21,7 @@
     "vite": "^7.3.1"
   },
   "dependencies": {
+    "@svar-ui/svelte-grid": "^2.5.0",
     "@tailwindcss/vite": "^4.1.18",
     "liquid-glass-svelte": "^1.2.0",
     "tailwindcss": "^4.1.18"

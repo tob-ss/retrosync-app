@@ -21,6 +21,19 @@ query getPaths($device: String!, $userID: Int!) {
   }
 }
 
+query getLocalSaves($userID: Int!) {
+  getLocalSaves(UserID: $userID) {
+    IDs
+    UserIDs
+    Names
+    Consoles
+    Devices
+    TimeMods
+    Paths
+  }
+}
+  
+
 mutation updateTime($id: Int!, $timemod: Int!) {
   updateTime(input: {ID: $id, TimeMod: $timemod}) {
     ID

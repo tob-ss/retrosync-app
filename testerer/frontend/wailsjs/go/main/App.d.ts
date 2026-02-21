@@ -3,4 +3,8 @@
 
 export function CheckProgress():Promise<number>;
 
+export function GetSaves():Promise<Array<Record<string, any>>>;
+
+export function StartQuickScan():Promise<void>;
+
 export function StartScan():Promise<void>;

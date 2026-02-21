@@ -17,6 +17,19 @@
 #  GetOneSave(id: Int!): Metadata!
 #}
 
+type AllIDs {
+  IDs: [Int!]
+}
+
+type LocalSaves {
+  IDs: [Int!]
+  UserIDs: [Int!]
+  Names: [String!]
+  Consoles: [String!]
+  Devices: [String!]
+  TimeMods: [Int!]
+  Paths: [String!]
+}
 
 type Post {
   Device: String!
@@ -74,4 +87,6 @@ type Mutation {
 
 type Query {
   getPaths(Device: String!, UserID: Int!): Paths!
+  getIDs(UserID: Int!): AllIDs!
+  getLocalSaves(UserID: Int!): LocalSaves!
 }
