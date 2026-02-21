@@ -5,6 +5,8 @@
 
   //  let data: Array<Record<string, any>> = GetSaves();
 
+    let loadGrid: boolean = $state(false);
+
     const columns = [
             {id: "ID", header: "Unique Save Number"},
             {id: "Game_Name", header: "Game Name"},
@@ -22,11 +24,8 @@
 
     (async () => {
         const data = await GetSaves();
-        console.log(data);
+        loadGrid = true;
     });
-
-    
-
     
 </script>
 
@@ -34,7 +33,9 @@
 <div class="h-full w-full">
     <div class="h-full grid grid-cols-3 grid-rows-6 gap-4">
         <div class="col-span-3 row-span-6">
+        {#if loadGrid === true}
           <Grid {data} {columns} />
+        {/if}
         </div>
     </div>
 </div>
