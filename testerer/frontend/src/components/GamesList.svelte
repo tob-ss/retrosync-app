@@ -5,13 +5,15 @@
 
   //  let data: Array<Record<string, any>> = GetSaves();
 
-    GetSaves().then(meta => {
-        console.log(meta);
+    let data = $state([])
+
+    GetSaves().then(data => {
+        console.log(data);
     });
 
     (async () => {
-        const meta = await GetSaves();
-        console.log(meta);
+        const data = await GetSaves();
+        console.log(data);
     });
 
     const columns = [
@@ -30,7 +32,7 @@
 <div class="h-full w-full">
     <div class="h-full grid grid-cols-3 grid-rows-6 gap-4">
         <div class="col-span-3 row-span-6">
-          
+          <Grid {data} {columns} />
         </div>
     </div>
 </div>
