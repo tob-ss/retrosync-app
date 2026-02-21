@@ -24,7 +24,6 @@
 
     (async () => {
         const data = await GetSaves();
-        loadGrid = true;
     });
     
 </script>
@@ -33,9 +32,11 @@
 <div class="h-full w-full">
     <div class="h-full grid grid-cols-3 grid-rows-6 gap-4">
         <div class="col-span-3 row-span-6">
-        {#if loadGrid === true}
-          <Grid {data} {columns} />
-        {/if}
+        {#await GetSaves()}
+            <p>Getting Saves...</p>
+        {:then data}
+            <Grid {data} {columns} />
+        {/await}
         </div>
     </div>
 </div>
