@@ -8,12 +8,12 @@
     let loadGrid: boolean = $state(false);
 
     const columns = [
-            {id: "ID", header: "Unique Save Number", flexgrow: 0.25},
-            {id: "Game_Name", header: "Game Name", flexgrow: 1},
-            {id: "Console", header: "Console", flexgrow: 1},
-            {id: "Device", header: "Current Device", flexgrow: 0.5},
-            {id: "Time_Modified", header: "Last Saved", flexgrow: 0.5},
-            {id: "Save_Path", header: "Save Location", flexgrow: 2},
+            {id: "ID", header: "Unique Save Number", flexgrow: 0.25, sort: true},
+            {id: "Game_Name", header: "Game Name", flexgrow: 1, sort: true},
+            {id: "Console", header: "Console", flexgrow: 1, sort: true},
+            {id: "Device", header: "Current Device", flexgrow: 0.5, sort: true},
+            {id: "Time_Modified", header: "Last Saved", flexgrow: 0.5, sort: true},
+            {id: "Save_Path", header: "Save Location", flexgrow: 2, sort: true},
         ]
 
     GetSaves().then(data => {
