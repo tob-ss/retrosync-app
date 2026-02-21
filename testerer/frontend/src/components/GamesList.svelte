@@ -7,12 +7,12 @@
 
     GetSaves().then(meta => {
         console.log(meta);
-    })
+    });
 
     (async () => {
         const meta = await GetSaves();
         console.log(meta);
-    })
+    });
 
     const columns = [
         {id: "ID", header: "Unique Save Number"},
