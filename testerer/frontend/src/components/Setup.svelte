@@ -55,7 +55,7 @@
     </div>
 {:else if scanningStart === true && skipSetup === false}
     <Scan />
-{:else}
+{:else if skipSetup === true}
     <Main />
 {/if}
 
