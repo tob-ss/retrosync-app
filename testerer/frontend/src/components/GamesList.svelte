@@ -3,20 +3,16 @@
     import { GetSaves } from '../../wailsjs/go/main/App';
     
 
-    function doSmthn() {
-        GetSaves()
-        .then(response => response.data)
-        .catch(error => error);
-    }
+  //  let data: Array<Record<string, any>> = GetSaves();
 
-    async function getResponse() {
-        const response = await doSmthn();
-        console.log(response)
-    }
-    
-    getResponse()
+    GetSaves().then(meta => {
+        console.log(meta);
+    })
 
-    let data: Array<Record<string, any>> = GetSaves();
+    (async () => {
+        const meta = await GetSaves();
+        console.log(meta);
+    })
 
     const columns = [
         {id: "ID", header: "Unique Save Number"},
