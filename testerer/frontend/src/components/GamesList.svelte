@@ -9,11 +9,11 @@
 
     const columns = [
             {id: "ID", header: "Unique Save Number"},
-            {id: "Game_Name", header: "Game Name"},
-            {id: "Console", header: "Console"},
+            {id: "Game_Name", header: "Game Name", flexgrow: 1},
+            {id: "Console", header: "Console", flexgrow: 1},
             {id: "Device", header: "Current Device"},
             {id: "Time_Modified", header: "Last Saved"},
-            {id: "Save_Path", header: "Save Location"},
+            {id: "Save_Path", header: "Save Location", flexgrow: 2},
         ]
 
     GetSaves().then(data => {
