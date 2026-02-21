@@ -8,11 +8,11 @@
     let loadGrid: boolean = $state(false);
 
     const columns = [
-            {id: "ID", header: "Unique Save Number"},
+            {id: "ID", header: "Unique Save Number", flexgrow: 0.25},
             {id: "Game_Name", header: "Game Name", flexgrow: 1},
             {id: "Console", header: "Console", flexgrow: 1},
-            {id: "Device", header: "Current Device"},
-            {id: "Time_Modified", header: "Last Saved"},
+            {id: "Device", header: "Current Device", flexgrow: 0.5},
+            {id: "Time_Modified", header: "Last Saved", flexgrow: 0.5},
             {id: "Save_Path", header: "Save Location", flexgrow: 2},
         ]
 
