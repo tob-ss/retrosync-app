@@ -17,7 +17,7 @@
         ]
 
     GetSaves().then(data => {
-        loadGrid = true;
+        console.log(data);
     });
 
     let data = $state([]);
