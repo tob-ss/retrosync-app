@@ -42,8 +42,5 @@
 </div>
 
 <style>
-    .table {
-        --wx-table-header-backgroud: color-mix(in oklab, var(--bg) 80%, transparent);
-        --wx-border: color-mix(in oklab, var(--wx-table-header-backgroud) 80%, rgb(255, 253, 120));
-    }
+    
 </style>
