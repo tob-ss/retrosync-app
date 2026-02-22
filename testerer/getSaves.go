@@ -134,6 +134,8 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 		if integer, ok := (gameMap["Epoch_Time"]).(int); ok {
 			dateEpoch := integer
 			*timePoint = append(*timePoint, dateEpoch)
+		} else {
+			fmt.Println("ok and integer is", ok, integer)
 		}
 		fmt.Println("timemod is now:", timeMod)
 	}
