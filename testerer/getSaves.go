@@ -127,7 +127,10 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 	timeMod := []int{}
 	timePoint := &timeMod
 
+	fmt.Println("savesslice length is", len(savesSlice))
+
 	for _, gameMap := range savesSlice {
+		fmt.Println("gameMap name, epoch is and length is", gameMap["Game_Name"], gameMap["Epoch_Time"], len(gameMap))
 		if integer, ok := (gameMap["Epoch_Time"]).(int); ok {
 			dateEpoch := integer
 			*timePoint = append(*timePoint, dateEpoch)
