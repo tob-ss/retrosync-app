@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"maps"
 	"net/http"
-	"reflect"
 	"slices"
 	"strings"
 	"time"
@@ -128,10 +127,10 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 	timeMod := []int{}
 	timePoint := &timeMod
 
-	fmt.Println("savesslice length is", len(savesSlice))
+	//fmt.Println("savesslice length is", len(savesSlice))
 
 	for _, gameMap := range savesSlice {
-		fmt.Println("gameMap name, epoch is and length is", gameMap["Game_Name"], gameMap["Epoch_Time"], len(gameMap))
+		//fmt.Println("gameMap name, epoch is and length is", gameMap["Game_Name"], gameMap["Epoch_Time"], len(gameMap))
 
 		epoch := gameMap["Epoch_Time"]
 
@@ -139,7 +138,7 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 			epoch = int(float)
 		}
 
-		fmt.Println("the type of epoch is", reflect.TypeOf(epoch))
+		//fmt.Println("the type of epoch is", reflect.TypeOf(epoch))
 
 		if integer, ok := (epoch).(int); ok {
 			dateEpoch := integer
@@ -148,7 +147,7 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 			//fmt.Println("ok and integer is", ok, integer)
 
 		}
-		fmt.Println("timemod is now:", timeMod)
+		//fmt.Println("timemod is now:", timeMod)
 	}
 
 	fmt.Println("timeMod is", timeMod)
@@ -174,8 +173,10 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 		_, todayFound := slices.BinarySearch(*dayPoint, "Today")
 		_, yesterdayFound := slices.BinarySearch(*dayPoint, "Yesterday")
 		if found {
+			fmt.Println("I found a duplicate!", found, dateFormatted)
 			continue
 		} else {
+			fmt.Println("There's no duplicates...", found, dateFormatted)
 			if strings.Compare(todayFormatted, dateFormatted) != 0 && strings.Compare(yesterdayFormatted, dateFormatted) != 0 {
 				*dayPoint = append(*dayPoint, dateFormatted)
 			} else if strings.Compare(todayFormatted, dateFormatted) == 0 && !todayFound {
