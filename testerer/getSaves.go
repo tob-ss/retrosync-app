@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"maps"
 	"net/http"
+	"reflect"
 	"slices"
 	"strings"
 	"time"
@@ -131,7 +132,12 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 
 	for _, gameMap := range savesSlice {
 		fmt.Println("gameMap name, epoch is and length is", gameMap["Game_Name"], gameMap["Epoch_Time"], len(gameMap))
-		if integer, ok := (gameMap["Epoch_Time"]).(int); ok {
+
+		epoch := gameMap["Epoch_Time"]
+
+		fmt.Println("the type of epoch is", reflect.TypeOf(epoch))
+
+		if integer, ok := (epoch).(int); ok {
 			dateEpoch := integer
 			*timePoint = append(*timePoint, dateEpoch)
 		} else {
