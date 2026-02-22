@@ -45,7 +45,7 @@ func (a *App) GetSaves() []map[string]interface{} {
 
 	fmt.Println("Saves parsed! Sending Saves to frontend...")
 
-	fmt.Println("Here are the saves for debugging reasons", sliceOfSaves)
+	//fmt.Println("Here are the saves for debugging reasons", sliceOfSaves)
 
 	return sliceOfSaves
 }
@@ -133,6 +133,8 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 			*timePoint = append(*timePoint, dateEpoch)
 		}
 	}
+
+	fmt.Println("timeMod is", timeMod)
 
 	slices.Sort(timeMod)
 	slices.Reverse(timeMod)
