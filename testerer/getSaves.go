@@ -14,7 +14,11 @@ import (
 )
 
 func (a App) GetHeaders(savesSlice []map[string]interface{}) []string {
-	return createHeaders(savesSlice)
+	headers := createHeaders(savesSlice)
+
+	fmt.Println("headers are ", headers)
+
+	return headers
 }
 
 func (a *App) GetSaves() []map[string]interface{} {
