@@ -14,6 +14,7 @@
             {id: "Device", header: "Current Device", flexgrow: 0.5, sort: true},
             {id: "Time_Modified", header: "Last Saved", flexgrow: 0.5, sort: true},
             {id: "Save_Path", header: "Save Location", flexgrow: 2, sort: true},
+            {id: "Date_String", header: "Date Header", flexgrow: 1, sort: true},
         ]
 
     GetSaves().then(data => {
