@@ -3,7 +3,9 @@
 
 export function CheckProgress():Promise<number>;
 
-export function GetSaves():Promise<Array<Record<string, any>>|Array<string>>;
+export function GetHeaders(arg1:Array<Record<string, any>>):Promise<Array<string>>;
+
+export function GetSaves():Promise<Array<Record<string, any>>>;
 
 export function StartQuickScan():Promise<void>;
 

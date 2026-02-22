@@ -13,7 +13,11 @@ import (
 	//"math/rand"
 )
 
-func (a *App) GetSaves() ([]map[string]interface{}, []string) {
+func (a App) GetHeaders(savesSlice []map[string]interface{}) []string {
+	return createHeaders(savesSlice)
+}
+
+func (a *App) GetSaves() []map[string]interface{} {
 	fmt.Println("Started Get saves function!")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
@@ -28,22 +32,21 @@ func (a *App) GetSaves() ([]map[string]interface{}, []string) {
 
 	if err != nil {
 		fmt.Println("failed to get local saves")
-		return nil, nil
+		return nil
 	}
 
 	fmt.Println("Successfully got local saves! Parsing saves...")
 
-	sliceOfSaves, dayHeaders := createMaps(resp.GetLocalSaves.IDs, resp.GetLocalSaves.UserIDs, resp.GetLocalSaves.Names, resp.GetLocalSaves.Consoles, resp.GetLocalSaves.Devices, resp.GetLocalSaves.TimeMods, resp.GetLocalSaves.Paths)
+	sliceOfSaves := createMaps(resp.GetLocalSaves.IDs, resp.GetLocalSaves.UserIDs, resp.GetLocalSaves.Names, resp.GetLocalSaves.Consoles, resp.GetLocalSaves.Devices, resp.GetLocalSaves.TimeMods, resp.GetLocalSaves.Paths)
 
 	fmt.Println("Saves parsed! Sending Saves to frontend...")
 
-	fmt.Println("Here are the saves for debugging reasons", sliceOfSaves, dayHeaders)
+	fmt.Println("Here are the saves for debugging reasons", sliceOfSaves)
 
-	return sliceOfSaves, dayHeaders
+	return sliceOfSaves
 }
 
-func createMaps(ids []int, userIDs []int, names []string, consoles []string, devices []string, timeMods []int, paths []string) ([]map[string]interface{}, []string) {
-	dayHeaders := createHeaders(timeMods)
+func createMaps(ids []int, userIDs []int, names []string, consoles []string, devices []string, timeMods []int, paths []string) []map[string]interface{} {
 
 	id_map := maps.Collect(slices.All(ids))
 	user_map := maps.Collect(slices.All(userIDs))
@@ -81,7 +84,7 @@ func createMaps(ids []int, userIDs []int, names []string, consoles []string, dev
 
 	sliceOfSaves = addDate(sliceOfSaves)
 
-	return sliceOfSaves, dayHeaders
+	return sliceOfSaves
 }
 
 func addDate(savesSlice []map[string]interface{}) []map[string]interface{} {
@@ -116,7 +119,17 @@ func addDate(savesSlice []map[string]interface{}) []map[string]interface{} {
 	return savesSlice
 }
 
-func createHeaders(timeMod []int) []string {
+func createHeaders(savesSlice []map[string]interface{}) []string {
+	timeMod := []int{}
+	timePoint := &timeMod
+
+	for _, gameMap := range savesSlice {
+		if integer, ok := (gameMap["Epoch_Time"]).(int); ok {
+			dateEpoch := integer
+			*timePoint = append(*timePoint, dateEpoch)
+		}
+	}
+
 	slices.Sort(timeMod)
 	slices.Reverse(timeMod)
 	dayHeaders := []string{}

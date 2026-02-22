@@ -6,6 +6,10 @@ export function CheckProgress() {
   return window['go']['main']['App']['CheckProgress']();
 }
 
+export function GetHeaders(arg1) {
+  return window['go']['main']['App']['GetHeaders'](arg1);
+}
+
 export function GetSaves() {
   return window['go']['main']['App']['GetSaves']();
 }
