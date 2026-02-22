@@ -15,16 +15,20 @@
         
     });
 
-    GetHeaders(data).then(headers => {
-        console.log(headers);
-    });
+    function RetrieveHeaders(data): string[] {
+        GetHeaders(data).then(headers => {
+            console.log(headers);
+        });
 
-    let headers = $state([]);
+        let headers = $state([]);
 
-    (async () => {
-        const headers = await GetHeaders(data);
-    });
+        (async () => {
+            const headers = await GetHeaders(data);
+        });
+        return headers
+    } 
 
+    
     
     
 </script>
@@ -32,11 +36,10 @@
 
 <div class="h-full w-full">
     <div class="h-full grid grid-cols-3 grid-rows-6 gap-4 text-[#D7D6FC] font-heebo">
-        <div class="table col-span-3 row-span-6">
         {#await GetSaves()}
         <p>Getting Saves...</p>
         {:then data}
-            {#await GetHeaders(data)}
+            {#await RetrieveHeaders(data)}
             <p>Getting Headers...</p>
             {:then headers}
             {#each headers as header}
@@ -47,6 +50,5 @@
             {/each}
             {/await}
         {/await}
-        </div>
     </div>
 </div>
