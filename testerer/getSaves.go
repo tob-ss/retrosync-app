@@ -135,6 +135,7 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 			dateEpoch := integer
 			*timePoint = append(*timePoint, dateEpoch)
 		}
+		fmt.Println("timemod is now:", timeMod)
 	}
 
 	fmt.Println("timeMod is", timeMod)
