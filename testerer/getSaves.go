@@ -6,13 +6,14 @@ import (
 	"maps"
 	"net/http"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
 	//"math/rand"
 )
 
-func (a *App) GetSaves() []map[string]interface{} {
+func (a *App) GetSaves() ([]map[string]interface{}, []string) {
 	fmt.Println("Started Get saves function!")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
@@ -27,21 +28,23 @@ func (a *App) GetSaves() []map[string]interface{} {
 
 	if err != nil {
 		fmt.Println("failed to get local saves")
-		return nil
+		return nil, nil
 	}
 
 	fmt.Println("Successfully got local saves! Parsing saves...")
 
-	sliceOfSaves := createMaps(resp.GetLocalSaves.IDs, resp.GetLocalSaves.UserIDs, resp.GetLocalSaves.Names, resp.GetLocalSaves.Consoles, resp.GetLocalSaves.Devices, resp.GetLocalSaves.TimeMods, resp.GetLocalSaves.Paths)
+	sliceOfSaves, dayHeaders := createMaps(resp.GetLocalSaves.IDs, resp.GetLocalSaves.UserIDs, resp.GetLocalSaves.Names, resp.GetLocalSaves.Consoles, resp.GetLocalSaves.Devices, resp.GetLocalSaves.TimeMods, resp.GetLocalSaves.Paths)
 
 	fmt.Println("Saves parsed! Sending Saves to frontend...")
 
-	fmt.Println("Here are the saves for debugging reasons", sliceOfSaves)
+	fmt.Println("Here are the saves for debugging reasons", sliceOfSaves, dayHeaders)
 
-	return sliceOfSaves
+	return sliceOfSaves, dayHeaders
 }
 
-func createMaps(ids []int, userIDs []int, names []string, consoles []string, devices []string, timeMods []int, paths []string) []map[string]interface{} {
+func createMaps(ids []int, userIDs []int, names []string, consoles []string, devices []string, timeMods []int, paths []string) ([]map[string]interface{}, []string) {
+	dayHeaders := createHeaders(timeMods)
+
 	id_map := maps.Collect(slices.All(ids))
 	user_map := maps.Collect(slices.All(userIDs))
 	name_map := maps.Collect(slices.All(names))
@@ -49,6 +52,7 @@ func createMaps(ids []int, userIDs []int, names []string, consoles []string, dev
 	device_map := maps.Collect(slices.All(devices))
 	timeStrings := timeConverter(timeMods)
 	time_map := maps.Collect(slices.All(timeStrings))
+	epoch_map := maps.Collect(slices.All(timeMods))
 	path_map := maps.Collect(slices.All(paths))
 
 	sliceOfSaves := []map[string]interface{}{}
@@ -69,11 +73,84 @@ func createMaps(ids []int, userIDs []int, names []string, consoles []string, dev
 		gameSave["Time_Modified"] = timeMod
 		path := path_map[index]
 		gameSave["Save_Path"] = path
+		epoch := epoch_map[index]
+		gameSave["Epoch_Time"] = epoch
 
 		*slicePoint = append(*slicePoint, gameSave)
 	}
 
-	return sliceOfSaves
+	sliceOfSaves = addDate(sliceOfSaves)
+
+	return sliceOfSaves, dayHeaders
+}
+
+func addDate(savesSlice []map[string]interface{}) []map[string]interface{} {
+	timeNow := (time.Now().Unix())
+	timeYesterday := timeNow - 86400
+
+	yesterdaysDate := time.Unix(timeYesterday, 0).Format(time.RFC822Z)
+
+	todaysDate := time.Unix(timeNow, 0).Format(time.RFC822Z)
+
+	yesterdayFormatted := string(yesterdaysDate[0:9])
+	todayFormatted := string(todaysDate[0:9])
+
+	for _, saveMap := range savesSlice {
+		if integer, ok := (saveMap["Epoch_Time"]).(int); ok {
+			dateEpoch := integer
+
+			date := time.Unix(int64(dateEpoch), 0).Format(time.RFC822Z)
+			dateFormatted := string(date[0:9])
+
+			if strings.Compare(todayFormatted, dateFormatted) != 0 && strings.Compare(yesterdayFormatted, dateFormatted) != 0 {
+				saveMap["Date_String"] = dateFormatted
+			} else if strings.Compare(todayFormatted, dateFormatted) == 0 {
+				saveMap["Date_String"] = "Today"
+			} else if strings.Compare(yesterdayFormatted, dateFormatted) == 0 {
+				saveMap["Date_String"] = "Yesterday"
+			}
+		}
+
+	}
+
+	return savesSlice
+}
+
+func createHeaders(timeMod []int) []string {
+	slices.Sort(timeMod)
+	slices.Reverse(timeMod)
+	dayHeaders := []string{}
+	dayPoint := &dayHeaders
+	timeNow := (time.Now().Unix())
+	timeYesterday := timeNow - 86400
+
+	yesterdaysDate := time.Unix(timeYesterday, 0).Format(time.RFC822Z)
+
+	todaysDate := time.Unix(timeNow, 0).Format(time.RFC822Z)
+
+	yesterdayFormatted := string(yesterdaysDate[0:9])
+	todayFormatted := string(todaysDate[0:9])
+
+	for _, dateEpoch := range timeMod {
+		date := time.Unix(int64(dateEpoch), 0).Format(time.RFC822Z)
+		dateFormatted := string(date[0:9])
+		_, found := slices.BinarySearch(*dayPoint, dateFormatted)
+		_, todayFound := slices.BinarySearch(*dayPoint, "Today")
+		_, yesterdayFound := slices.BinarySearch(*dayPoint, "Yesterday")
+		if found {
+			continue
+		} else {
+			if strings.Compare(todayFormatted, dateFormatted) != 0 && strings.Compare(yesterdayFormatted, dateFormatted) != 0 {
+				*dayPoint = append(*dayPoint, dateFormatted)
+			} else if strings.Compare(todayFormatted, dateFormatted) == 0 && !todayFound {
+				*dayPoint = append(*dayPoint, "Today")
+			} else if strings.Compare(yesterdayFormatted, dateFormatted) == 0 && !yesterdayFound {
+				*dayPoint = append(*dayPoint, "Yesterday")
+			}
+		}
+	}
+
+	return dayHeaders
 }
 
 func timeConverter(timeMod []int) []string {

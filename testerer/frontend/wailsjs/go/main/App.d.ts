@@ -3,7 +3,7 @@
 
 export function CheckProgress():Promise<number>;
 
-export function GetSaves():Promise<Array<Record<string, any>>>;
+export function GetSaves():Promise<Array<Record<string, any>>|Array<string>>;
 
 export function StartQuickScan():Promise<void>;
 
