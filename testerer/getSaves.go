@@ -135,13 +135,18 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 
 		epoch := gameMap["Epoch_Time"]
 
+		if float, ok := (epoch).(float64); ok {
+			epoch = int(float)
+		}
+
 		fmt.Println("the type of epoch is", reflect.TypeOf(epoch))
 
 		if integer, ok := (epoch).(int); ok {
 			dateEpoch := integer
 			*timePoint = append(*timePoint, dateEpoch)
 		} else {
-			fmt.Println("ok and integer is", ok, integer)
+			//fmt.Println("ok and integer is", ok, integer)
+
 		}
 		fmt.Println("timemod is now:", timeMod)
 	}
