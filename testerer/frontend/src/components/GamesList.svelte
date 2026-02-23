@@ -17,20 +17,18 @@
 
     let headers = $state([]);
 
-    function RetrieveHeaders(data): string[] {
-        GetHeaders(data).then(headers => {
-            console.log(headers);
-        });
+    GetHeaders(data).then(headers => {
+        console.log(headers);
+    });
 
-        (async () => {
-            const headers = await GetHeaders(data);
-        });
-        return headers
-    } 
+    (async () => {
+        const headers = await GetHeaders(data);
 
+        
+    });
     
 
-   
+
     
     
 </script>
