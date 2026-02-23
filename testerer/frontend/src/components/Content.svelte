@@ -4,7 +4,7 @@
 
 
 <div class="h-full w-full">
-    <div class="h-screen grid grid-cols-1 grid-rows-6 gap-4">
+    <div class="grid grid-cols-1 grid-rows-6 gap-4">
         <div>Buttons</div>
         <div class="row-span-5">
             <div class="h-full grid grid-cols-3 grid-rows-7 gap-4">
