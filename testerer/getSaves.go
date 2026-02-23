@@ -107,7 +107,9 @@ func addDate(savesSlice []map[string]interface{}) []map[string]interface{} {
 			dateEpoch := integer
 
 			date := time.Unix(int64(dateEpoch), 0).Format(time.RFC822Z)
+
 			dateFormatted := string(date[0:9])
+			fmt.Println(dateFormatted)
 
 			if strings.Compare(todayFormatted, dateFormatted) != 0 && strings.Compare(yesterdayFormatted, dateFormatted) != 0 {
 				saveMap["Date_String"] = dateFormatted
