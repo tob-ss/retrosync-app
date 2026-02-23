@@ -43,7 +43,7 @@
             <p>Showing game: {save.Game_Name}</p>
         {/each}
         
-        {#await RetrieveHeaders(data)}
+        {#await GetHeaders(data)}
             <p>Getting Headers...</p>
         {:then headers}
         {#each headers as header}
