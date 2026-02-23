@@ -39,18 +39,24 @@
 <div class="h-full w-full">
     <div class="h-full grid grid-cols-3 grid-rows-6 gap-4 text-[#D7D6FC] font-heebo">
         {#await GetSaves()}
-        <p>Getting Saves...</p>
+            <p>Getting Saves...</p>
+        
         {:then data}
+        {#each data as save}
+            <p>Showing game: {save.Game_Name}</p>
+        {/each}
+        {/await}
         {#await RetrieveHeaders(data)}
             <p>Getting Headers...</p>
         {:then headers}
         {#each headers as header}
             <h1>{header}</h1>
-        {#each data as save}
-            <p>Showing game: {save.Game_Name}</p>
-        {/each}
         {/each}
         {/await}
-        {/await}
+        
+        
+        
+        
+        
     </div>
 </div>
