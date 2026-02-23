@@ -45,7 +45,7 @@
         {#each headers as header}
             <h1>{header}</h1>
             {#each data as save}
-            {#if header == save.Date_Sting}
+            {#if header === save.Date_Sting}
             <p>Showing game: {save.Game_Name}</p>
             {/if}
             {/each}
