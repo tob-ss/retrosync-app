@@ -48,13 +48,11 @@
             <div class="col-span-3">
             <h1>{header}</h1>
                 <div class="col-span-3 row-span-5 row-start-2">
-                <Svroller width="10rem" height="10rem">
-                    {#each data as save}
-                    {#if header === save.Date_String}
-                    <p>Showing game: {save.Game_Name}</p>
-                    {/if}
-                    {/each}
-                </Svroller>
+                {#each data as save}
+                {#if header === save.Date_String}
+                <p>Showing game: {save.Game_Name}</p>
+                {/if}
+                {/each}
                 </div>
             </div>
         {/each}
