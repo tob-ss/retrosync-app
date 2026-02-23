@@ -168,6 +168,7 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 	todayFormatted := string(todaysDate[0:9])
 
 	for _, dateEpoch := range timeMod {
+		slices.Sort(*dayPoint)
 		date := time.Unix(int64(dateEpoch), 0).Format(time.RFC822Z)
 		dateFormatted := string(date[0:9])
 
