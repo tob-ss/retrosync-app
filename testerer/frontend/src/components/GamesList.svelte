@@ -50,7 +50,7 @@
             {$inspect(headers)}
                 {#each headers as header}
                 {$inspect(data)}
-                {$inspect(headers)}
+                {$inspect(header)}
                     <h1>{header}</h1>
                     {#each data as save}
                     <p>Showing game: {save.Game_Name}</p>
