@@ -28,7 +28,9 @@
         return headers
     } 
 
-    
+    $inspect(data);
+
+    $inspect(headers);
     
     
 </script>
