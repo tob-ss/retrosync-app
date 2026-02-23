@@ -45,6 +45,12 @@
             <p>Showing game: {save.Game_Name}</p>
         {/each}
         {/await}
-        
+        {#await RetrieveHeaders(data)}
+            <p>Getting Headers...</p>
+        {:then headers}
+        {#each headers as header}
+            <h1>{header}</h1>
+        {/each}
+        {/await}
     </div>
 </div>
