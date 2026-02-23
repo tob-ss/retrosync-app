@@ -15,12 +15,12 @@
         
     });
 
+    let headers = $state([]);
+
     function RetrieveHeaders(data): string[] {
         GetHeaders(data).then(headers => {
             console.log(headers);
         });
-
-        let headers = $state([]);
 
         (async () => {
             const headers = await GetHeaders(data);
