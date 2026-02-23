@@ -1,6 +1,7 @@
 <script lang="ts">
     import { GetSaves } from "../../wailsjs/go/main/App";
     import { GetHeaders } from "../../wailsjs/go/main/App";
+    import { Svroller } from "svrollbar";
 
   //  let data: Array<Record<string, any>> = GetSaves();
 
@@ -47,11 +48,13 @@
             <div class="col-span-3">
             <h1>{header}</h1>
                 <div class="col-span-3 row-span-5 row-start-2">
-                {#each data as save}
-                {#if header === save.Date_String}
-                <p>Showing game: {save.Game_Name}</p>
-                {/if}
-                {/each}
+                <Svroller width="10rem" height="10rem">
+                    {#each data as save}
+                    {#if header === save.Date_String}
+                    <p>Showing game: {save.Game_Name}</p>
+                    {/if}
+                    {/each}
+                </Svroller>
                 </div>
             </div>
         {/each}
