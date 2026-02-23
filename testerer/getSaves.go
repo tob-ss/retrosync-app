@@ -109,7 +109,6 @@ func addDate(savesSlice []map[string]interface{}) []map[string]interface{} {
 			date := time.Unix(int64(dateEpoch), 0).Format(time.RFC822Z)
 
 			dateFormatted := string(date[0:9])
-			fmt.Println(dateFormatted)
 
 			if strings.Compare(todayFormatted, dateFormatted) != 0 && strings.Compare(yesterdayFormatted, dateFormatted) != 0 {
 				saveMap["Date_String"] = dateFormatted
@@ -171,6 +170,9 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 	for _, dateEpoch := range timeMod {
 		date := time.Unix(int64(dateEpoch), 0).Format(time.RFC822Z)
 		dateFormatted := string(date[0:9])
+
+		fmt.Println(dateFormatted)
+
 		_, found := slices.BinarySearch(*dayPoint, dateFormatted)
 		_, todayFound := slices.BinarySearch(*dayPoint, "Today")
 		_, yesterdayFound := slices.BinarySearch(*dayPoint, "Yesterday")
