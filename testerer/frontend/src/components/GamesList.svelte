@@ -39,24 +39,18 @@
 <div class="h-full w-full">
     <div class="h-full grid grid-cols-3 grid-rows-6 gap-4 text-[#D7D6FC] font-heebo">
         {#await GetSaves()}
-            {$inspect(data)}
         <p>Getting Saves...</p>
         {:then data}
-            {#await RetrieveHeaders(data)}
-            {$inspect(data)}
+        {#await RetrieveHeaders(data)}
             <p>Getting Headers...</p>
-            {:then headers}
-            {$inspect(data)}
-            {$inspect(headers)}
-                {#each headers as header}
-                {$inspect(data)}
-                {$inspect(header)}
-                    <h1>{header}</h1>
-                    {#each data as save}
-                    <p>Showing game: {save.Game_Name}</p>
-                    {/each}
-                {/each}
-            {/await}
+        {:then headers}
+        {#each headers as header}
+            <h1>{header}</h1>
+        {#each data as save}
+            <p>Showing game: {save.Game_Name}</p>
+        {/each}
+        {/each}
+        {/await}
         {/await}
     </div>
 </div>
