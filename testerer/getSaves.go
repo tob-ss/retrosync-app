@@ -124,6 +124,20 @@ func addDate(savesSlice []map[string]interface{}) []map[string]interface{} {
 	return savesSlice
 }
 
+func sliceSearcher(targetSlice []string, targetString string) bool {
+	var exists bool
+
+	for _, x := range targetSlice {
+		if strings.Compare(x, targetString) != 0 {
+			exists = false
+		} else {
+			exists = true
+		}
+	}
+
+	return exists
+}
+
 func createHeaders(savesSlice []map[string]interface{}) []string {
 	timeMod := []int{}
 	timePoint := &timeMod
@@ -168,15 +182,15 @@ func createHeaders(savesSlice []map[string]interface{}) []string {
 	todayFormatted := string(todaysDate[0:9])
 
 	for _, dateEpoch := range timeMod {
-		slices.Sort(*dayPoint)
+
 		date := time.Unix(int64(dateEpoch), 0).Format(time.RFC822Z)
 		dateFormatted := string(date[0:9])
 
 		fmt.Println(dateFormatted)
 
-		_, found := slices.BinarySearch(*dayPoint, dateFormatted)
-		_, todayFound := slices.BinarySearch(*dayPoint, "Today")
-		_, yesterdayFound := slices.BinarySearch(*dayPoint, "Yesterday")
+		found := sliceSearcher(*dayPoint, dateFormatted)
+		todayFound := sliceSearcher(*dayPoint, "Today")
+		yesterdayFound := sliceSearcher(*dayPoint, "Yesterday")
 		if found {
 			fmt.Println("I found a duplicate!", found, dateFormatted)
 			continue
