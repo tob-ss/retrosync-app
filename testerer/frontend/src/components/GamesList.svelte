@@ -46,8 +46,8 @@
         {:then headers}
         <div class="flex flex-col text-[#D7D6FC] font-heebo">
         {#each headers as header}
-            <div class="h-full text-center">
-                <div class="h-12  py-24">
+            <div class="h-full">
+                <div class="h-12  py-24 flex justify-center">
                     <h1 class="text-4xl font-bold">{header}</h1>
                 </div>
                 <div class="flex justify-center flex-wrap">
@@ -59,7 +59,7 @@
                             console={save.Console}
                             device={save.Device}
                             timeMod={save.Time_Modified}
-                            thumbnail={test_thumbnail}
+                            thumbnail={save.Thumbnail}
                             />
                     {/if}
                 </div>

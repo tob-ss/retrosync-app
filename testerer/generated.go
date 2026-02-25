@@ -150,13 +150,14 @@ func (v *deleteLocalResponse) GetDeleteLocal() deleteLocalDeleteLocalDeviceUserI
 
 // getLocalSavesGetLocalSaves includes the requested fields of the GraphQL type LocalSaves.
 type getLocalSavesGetLocalSaves struct {
-	IDs      []int    `json:"IDs"`
-	UserIDs  []int    `json:"UserIDs"`
-	Names    []string `json:"Names"`
-	Consoles []string `json:"Consoles"`
-	Devices  []string `json:"Devices"`
-	TimeMods []int    `json:"TimeMods"`
-	Paths    []string `json:"Paths"`
+	IDs        []int    `json:"IDs"`
+	UserIDs    []int    `json:"UserIDs"`
+	Names      []string `json:"Names"`
+	Consoles   []string `json:"Consoles"`
+	Devices    []string `json:"Devices"`
+	TimeMods   []int    `json:"TimeMods"`
+	Paths      []string `json:"Paths"`
+	Thumbnails []string `json:"Thumbnails"`
 }
 
 // GetIDs returns getLocalSavesGetLocalSaves.IDs, and is useful for accessing the field via an interface.
@@ -179,6 +180,9 @@ func (v *getLocalSavesGetLocalSaves) GetTimeMods() []int { return v.TimeMods }
 
 // GetPaths returns getLocalSavesGetLocalSaves.Paths, and is useful for accessing the field via an interface.
 func (v *getLocalSavesGetLocalSaves) GetPaths() []string { return v.Paths }
+
+// GetThumbnails returns getLocalSavesGetLocalSaves.Thumbnails, and is useful for accessing the field via an interface.
+func (v *getLocalSavesGetLocalSaves) GetThumbnails() []string { return v.Thumbnails }
 
 // getLocalSavesResponse is returned by getLocalSaves on success.
 type getLocalSavesResponse struct {
@@ -353,6 +357,7 @@ query getLocalSaves ($userID: Int!) {
 		Devices
 		TimeMods
 		Paths
+		Thumbnails
 	}
 }
 `

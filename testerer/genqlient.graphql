@@ -30,6 +30,7 @@ query getLocalSaves($userID: Int!) {
     Devices
     TimeMods
     Paths
+    Thumbnails
   }
 }
   

@@ -4,7 +4,7 @@
 </script>
 
 <div class="h-64 w-xl m-12 grid grid-cols-3 grid-rows-1 gap-4 p-12">
-    <div class="col-span-2 col-start-2 row-start-1 grid grid-cols-3 grid-rows-3 gap-4">
+    <div class="col-span-2 col-start-2 row-start-1 grid grid-cols-3 grid-rows-3 gap-4 font-bold">
         <div class="col-span-3">
             <p>{game.gameName}</p>
         </div>

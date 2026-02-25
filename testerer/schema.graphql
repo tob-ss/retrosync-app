@@ -29,6 +29,7 @@ type LocalSaves {
   Devices: [String!]
   TimeMods: [Int!]
   Paths: [String!]
+  Thumbnails: [String!]
 }
 
 type Post {

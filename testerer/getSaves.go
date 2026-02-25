@@ -41,16 +41,16 @@ func (a *App) GetSaves() []map[string]interface{} {
 
 	fmt.Println("Successfully got local saves! Parsing saves...")
 
-	sliceOfSaves := createMaps(resp.GetLocalSaves.IDs, resp.GetLocalSaves.UserIDs, resp.GetLocalSaves.Names, resp.GetLocalSaves.Consoles, resp.GetLocalSaves.Devices, resp.GetLocalSaves.TimeMods, resp.GetLocalSaves.Paths)
+	sliceOfSaves := createMaps(resp.GetLocalSaves.IDs, resp.GetLocalSaves.UserIDs, resp.GetLocalSaves.Names, resp.GetLocalSaves.Consoles, resp.GetLocalSaves.Devices, resp.GetLocalSaves.TimeMods, resp.GetLocalSaves.Paths, resp.GetLocalSaves.Thumbnails)
 
 	fmt.Println("Saves parsed! Sending Saves to frontend...")
 
-	//fmt.Println("Here are the saves for debugging reasons", sliceOfSaves)
+	fmt.Println("Here are the saves for debugging reasons", sliceOfSaves)
 
 	return sliceOfSaves
 }
 
-func createMaps(ids []int, userIDs []int, names []string, consoles []string, devices []string, timeMods []int, paths []string) []map[string]interface{} {
+func createMaps(ids []int, userIDs []int, names []string, consoles []string, devices []string, timeMods []int, paths []string, thumbnails []string) []map[string]interface{} {
 
 	id_map := maps.Collect(slices.All(ids))
 	user_map := maps.Collect(slices.All(userIDs))
@@ -61,6 +61,7 @@ func createMaps(ids []int, userIDs []int, names []string, consoles []string, dev
 	time_map := maps.Collect(slices.All(timeStrings))
 	epoch_map := maps.Collect(slices.All(timeMods))
 	path_map := maps.Collect(slices.All(paths))
+	thumbnail_map := maps.Collect(slices.All(thumbnails))
 
 	sliceOfSaves := []map[string]interface{}{}
 	slicePoint := &sliceOfSaves
@@ -82,6 +83,8 @@ func createMaps(ids []int, userIDs []int, names []string, consoles []string, dev
 		gameSave["Save_Path"] = path
 		epoch := epoch_map[index]
 		gameSave["Epoch_Time"] = epoch
+		thumbnail := thumbnail_map[index]
+		gameSave["Thumbnail"] = thumbnail
 
 		*slicePoint = append(*slicePoint, gameSave)
 	}
