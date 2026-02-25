@@ -2,6 +2,7 @@
     import { GetSaves } from "../../wailsjs/go/main/App";
     import { GetHeaders } from "../../wailsjs/go/main/App";
     import { Svroller } from "svrollbar";
+    import SaveFile from "./SaveFile.svelte";
 
   //  let data: Array<Record<string, any>> = GetSaves();
 
@@ -29,13 +30,13 @@
     });
     
 
-
+    let test_thumbnail = "https://f003.backblazeb2.com/file/retrosync-thumbnails/Sony+-+PlayStation+Portable/Named_Boxarts/Dragon+Ball+Z+-+Tenkaichi+Tag+Team+(Europe)+(En%2CFr%2CDe%2CEs%2CIt).png"
     
     
 </script>
 
 
-<div class="h-full w-full">
+<div class="h-full w-full overflow-y-scroll">
     
         {#await GetSaves()}
             <p>Getting Saves...</p>
@@ -43,15 +44,25 @@
         {#await GetHeaders(data)}
             <p>Getting Headers...</p>
         {:then headers}
-        <div class="h-full grid grid-cols-3 grid-rows-6 gap-4 text-[#D7D6FC] font-heebo">
+        <div class="flex flex-col text-[#D7D6FC] font-heebo">
         {#each headers as header}
-            <div class="col-span-3">
-            <h1>{header}</h1>
-                <div class="col-span-3 row-span-5 row-start-2">
+            <div class="h-full text-center">
+                <div class="h-12  py-24">
+                    <h1 class="text-4xl font-bold">{header}</h1>
+                </div>
+                <div class="flex justify-center flex-wrap">
                 {#each data as save}
-                {#if header === save.Date_String}
-                <p>Showing game: {save.Game_Name}</p>
-                {/if}
+                <div>
+                    {#if header === save.Date_String}
+                        <SaveFile 
+                            gameName={save.Game_Name}
+                            console={save.Console}
+                            device={save.Device}
+                            timeMod={save.Time_Modified}
+                            thumbnail={test_thumbnail}
+                            />
+                    {/if}
+                </div>
                 {/each}
                 </div>
             </div>

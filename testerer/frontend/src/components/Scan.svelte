@@ -34,6 +34,8 @@
 
 </script>
 
+
+{#if scanningStart === false && mainScreen === false}
 <div class="h-screen w-full">
         <div class="h-screen grid grid-cols-8 grid-rows-7 gap-4">
             <div class="col-span-4 col-start-3 row-start-2 self-center justify-self-center">
@@ -77,7 +79,7 @@
         </div>
 </div>
 
-{#if mainScreen}
+{:else if mainScreen}
 <Main />
 {/if}
 

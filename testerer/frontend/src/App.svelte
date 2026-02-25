@@ -4,9 +4,9 @@
 
 
 
-<main>
-  <Background />
-</main>
+
+<Background />
+
 
 <style>
 

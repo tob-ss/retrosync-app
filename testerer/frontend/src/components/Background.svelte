@@ -3,17 +3,17 @@
 
 </script>
 
-<main>
-    <div class="dark relative flex flex-col h-screen items-center justify-center bg-[#2C2F48] transition-bg">
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="dark jumbo absolute -inset-[10px] opacity-50">
-                
-            </div>
+
+<div class="dark relative flex flex-col h-screen items-center justify-center bg-[#2C2F48] transition-bg">
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="dark jumbo absolute -inset-[10px] opacity-50">
             
         </div>
-        <Welcome />
+        
     </div>
-</main>
+    <Welcome />
+</div>
+
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap');
