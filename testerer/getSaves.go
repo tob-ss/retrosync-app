@@ -50,6 +50,16 @@ func (a *App) GetSaves() []map[string]interface{} {
 	return sliceOfSaves
 }
 
+/*func sortSlice(unsortedSlice []map[string]interface{}) []map[string]interface{} {
+	sortedSlice := []map[string]interface{}{}
+
+	for _, gameSave := range unsortedSlice {
+		biggest := gameSave["Epoch_Time"]
+
+		if
+	}
+}*/
+
 func createMaps(ids []int, userIDs []int, names []string, consoles []string, devices []string, timeMods []int, paths []string, thumbnails []string) []map[string]interface{} {
 
 	id_map := maps.Collect(slices.All(ids))
