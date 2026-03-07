@@ -16,4 +16,4 @@ You can also click on the RetroSync icon in the app tray to interact with it the
 
 ## Contributing
 
-RetroSync is closed source for now, however, plans are in place to make it open source. Especially for those who wish to use it in a home lab environment.
+> RetroSync is closed source for now, however, plans are in place to make it open source. Especially for those who wish to use it in a home lab environment.
