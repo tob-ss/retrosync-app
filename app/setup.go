@@ -21,6 +21,15 @@ import (
 	//"math/rand"
 )
 
+func getDevice() string {
+	Hostname, err := os.Hostname()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Hostname is: %s\n", Hostname)
+	return Hostname
+}
+
 func startScan() {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -35,7 +44,9 @@ func StartQuickScan() {
 		fmt.Println(err)
 	}
 
-	err = quickScan("Desktop", 420, homeDir)
+	deviceName := getDevice()
+
+	err = quickScan(deviceName, 420, homeDir)
 
 	if err != nil {
 		fmt.Println("Unexpected error:", err)
@@ -312,27 +323,29 @@ func saveSearch(dir string) {
 
 	//fmt.Println("doing postsaves, current elapsed time is,", time.Since(start))
 
-	flushSaves("Desktop", 420)
+	deviceName := getDevice()
+
+	flushSaves(deviceName, 420)
 
 	*progressPointer = 0.79
 
-	postSaves("Desktop", "retro", retro_dirs, retro_time)
+	postSaves(deviceName, "retro", retro_dirs, retro_time)
 	*progressPointer = 0.83
-	postSaves("Desktop", "wii", wii_dirs, wii_time)
+	postSaves(deviceName, "wii", wii_dirs, wii_time)
 	*progressPointer = 0.87
-	postSaves("Desktop", "psp", psp_dirs, psp_time)
+	postSaves(deviceName, "psp", psp_dirs, psp_time)
 	*progressPointer = 0.91
-	postSaves("Desktop", "ps3", ps3_dirs, ps3_time)
+	postSaves(deviceName, "ps3", ps3_dirs, ps3_time)
 	*progressPointer = 0.95
 	fmt.Println("the n3ds directory list is:", n3ds_dirs)
-	postSaves("Desktop", "n3ds", n3ds_dirs, n3ds_time)
+	postSaves(deviceName, "n3ds", n3ds_dirs, n3ds_time)
 
 	elapsed := time.Since(start)
 	fmt.Println(elapsed)
 
 	*progressPointer = 1
 
-	err := quickScan("Desktop", 420, dir)
+	err := quickScan(deviceName, 420, dir)
 
 	if err != nil {
 		fmt.Println("Unexpected error:", err)

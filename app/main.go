@@ -41,6 +41,7 @@ func onReady() {
 		systray.SetTitle("Retrosync")
 		systray.SetTooltip("Retrosync is active!")
 		// Sets the icon of a menu item. Only available on Mac.
+
 		startScan()
 	}()
 }
