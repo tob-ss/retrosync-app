@@ -1,42 +1,46 @@
 package main
 
 import (
-	"embed"
+	"fmt"
+	"main/icon"
+	"time"
 
-	"github.com/wailsapp/wails/v2"
-	"github.com/wailsapp/wails/v2/pkg/options"
-	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
+	"github.com/slytomcat/systray"
 )
 
-//go:embed all:frontend/dist
-var assets embed.FS
-
 func main() {
-
-	// Create an instance of the app structure
-	app := NewApp()
-
-	//searchFolderWii3DS()
-
-	//test()
-
-	// Create application with options
-	err := wails.Run(&options.App{
-		Title:  "app",
-		Width:  1024,
-		Height: 768,
-		AssetServer: &assetserver.Options{
-			Assets: assets,
-		},
-		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup:        app.startup,
-		Bind: []interface{}{
-			app,
-		},
-	})
-
-	if err != nil {
-		println("Error:", err.Error())
+	onExit := func() {
+		now := time.Now()
+		fmt.Println("Exit at", now.String())
 	}
+
+	systray.Run(onReady, onExit)
 }
 
+func addQuitItem() {
+	mQuit := systray.AddMenuItem("Quit", "Quit the whole app")
+	mQuit.Enable()
+	go func() {
+		<-mQuit.ClickedCh
+		fmt.Println("Requesting quit")
+		systray.Quit()
+		fmt.Println("Finished quitting")
+	}()
+	systray.AddSeparator()
+}
+
+func onReady() {
+	systray.SetTemplateIcon(icon.Data, icon.Data)
+	systray.SetTitle("Retrosync")
+	systray.SetTooltip("Retrosync is active!")
+	addQuitItem()
+
+	// We can manipulate the systray in other goroutines
+	go func() {
+		systray.SetTemplateIcon(icon.Data, icon.Data)
+		systray.SetTitle("Retrosync")
+		systray.SetTooltip("Retrosync is active!")
+		// Sets the icon of a menu item. Only available on Mac.
+		startScan()
+	}()
+}

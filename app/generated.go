@@ -13,7 +13,7 @@ type __createSavesInput struct {
 	Device      string   `json:"device"`
 	Console     string   `json:"console"`
 	Directories []string `json:"directories"`
-	Timemod     []int64    `json:"timemod"`
+	Timemod     []int    `json:"timemod"`
 }
 
 // GetDevice returns __createSavesInput.Device, and is useful for accessing the field via an interface.
@@ -26,14 +26,66 @@ func (v *__createSavesInput) GetConsole() string { return v.Console }
 func (v *__createSavesInput) GetDirectories() []string { return v.Directories }
 
 // GetTimemod returns __createSavesInput.Timemod, and is useful for accessing the field via an interface.
-func (v *__createSavesInput) GetTimemod() []int64 { return v.Timemod }
+func (v *__createSavesInput) GetTimemod() []int { return v.Timemod }
+
+// __deleteLocalIDInput is used internally by genqlient
+type __deleteLocalIDInput struct {
+	Id int `json:"id"`
+}
+
+// GetId returns __deleteLocalIDInput.Id, and is useful for accessing the field via an interface.
+func (v *__deleteLocalIDInput) GetId() int { return v.Id }
+
+// __deleteLocalInput is used internally by genqlient
+type __deleteLocalInput struct {
+	Device string `json:"device"`
+	UserID int    `json:"userID"`
+}
+
+// GetDevice returns __deleteLocalInput.Device, and is useful for accessing the field via an interface.
+func (v *__deleteLocalInput) GetDevice() string { return v.Device }
+
+// GetUserID returns __deleteLocalInput.UserID, and is useful for accessing the field via an interface.
+func (v *__deleteLocalInput) GetUserID() int { return v.UserID }
+
+// __getLocalSavesInput is used internally by genqlient
+type __getLocalSavesInput struct {
+	UserID int `json:"userID"`
+}
+
+// GetUserID returns __getLocalSavesInput.UserID, and is useful for accessing the field via an interface.
+func (v *__getLocalSavesInput) GetUserID() int { return v.UserID }
+
+// __getPathsInput is used internally by genqlient
+type __getPathsInput struct {
+	Device string `json:"device"`
+	UserID int    `json:"userID"`
+}
+
+// GetDevice returns __getPathsInput.Device, and is useful for accessing the field via an interface.
+func (v *__getPathsInput) GetDevice() string { return v.Device }
+
+// GetUserID returns __getPathsInput.UserID, and is useful for accessing the field via an interface.
+func (v *__getPathsInput) GetUserID() int { return v.UserID }
+
+// __updateTimeInput is used internally by genqlient
+type __updateTimeInput struct {
+	Id      int `json:"id"`
+	Timemod int `json:"timemod"`
+}
+
+// GetId returns __updateTimeInput.Id, and is useful for accessing the field via an interface.
+func (v *__updateTimeInput) GetId() int { return v.Id }
+
+// GetTimemod returns __updateTimeInput.Timemod, and is useful for accessing the field via an interface.
+func (v *__updateTimeInput) GetTimemod() int { return v.Timemod }
 
 // createSavesCreateSavesPost includes the requested fields of the GraphQL type Post.
 type createSavesCreateSavesPost struct {
 	Device      string   `json:"Device"`
 	Console     string   `json:"Console"`
 	Directories []string `json:"Directories"`
-	Timemod     []int64    `json:"Timemod"`
+	Timemod     []int    `json:"Timemod"`
 }
 
 // GetDevice returns createSavesCreateSavesPost.Device, and is useful for accessing the field via an interface.
@@ -46,7 +98,7 @@ func (v *createSavesCreateSavesPost) GetConsole() string { return v.Console }
 func (v *createSavesCreateSavesPost) GetDirectories() []string { return v.Directories }
 
 // GetTimemod returns createSavesCreateSavesPost.Timemod, and is useful for accessing the field via an interface.
-func (v *createSavesCreateSavesPost) GetTimemod() []int64 { return v.Timemod }
+func (v *createSavesCreateSavesPost) GetTimemod() []int { return v.Timemod }
 
 // createSavesResponse is returned by createSaves on success.
 type createSavesResponse struct {
@@ -55,6 +107,130 @@ type createSavesResponse struct {
 
 // GetCreateSaves returns createSavesResponse.CreateSaves, and is useful for accessing the field via an interface.
 func (v *createSavesResponse) GetCreateSaves() createSavesCreateSavesPost { return v.CreateSaves }
+
+// deleteLocalDeleteLocalDeviceUserID includes the requested fields of the GraphQL type DeviceUserID.
+type deleteLocalDeleteLocalDeviceUserID struct {
+	Device string `json:"Device"`
+	UserID int    `json:"UserID"`
+}
+
+// GetDevice returns deleteLocalDeleteLocalDeviceUserID.Device, and is useful for accessing the field via an interface.
+func (v *deleteLocalDeleteLocalDeviceUserID) GetDevice() string { return v.Device }
+
+// GetUserID returns deleteLocalDeleteLocalDeviceUserID.UserID, and is useful for accessing the field via an interface.
+func (v *deleteLocalDeleteLocalDeviceUserID) GetUserID() int { return v.UserID }
+
+// deleteLocalIDDeleteLocalIDUseID includes the requested fields of the GraphQL type UseID.
+type deleteLocalIDDeleteLocalIDUseID struct {
+	ID int `json:"ID"`
+}
+
+// GetID returns deleteLocalIDDeleteLocalIDUseID.ID, and is useful for accessing the field via an interface.
+func (v *deleteLocalIDDeleteLocalIDUseID) GetID() int { return v.ID }
+
+// deleteLocalIDResponse is returned by deleteLocalID on success.
+type deleteLocalIDResponse struct {
+	DeleteLocalID deleteLocalIDDeleteLocalIDUseID `json:"deleteLocalID"`
+}
+
+// GetDeleteLocalID returns deleteLocalIDResponse.DeleteLocalID, and is useful for accessing the field via an interface.
+func (v *deleteLocalIDResponse) GetDeleteLocalID() deleteLocalIDDeleteLocalIDUseID {
+	return v.DeleteLocalID
+}
+
+// deleteLocalResponse is returned by deleteLocal on success.
+type deleteLocalResponse struct {
+	DeleteLocal deleteLocalDeleteLocalDeviceUserID `json:"deleteLocal"`
+}
+
+// GetDeleteLocal returns deleteLocalResponse.DeleteLocal, and is useful for accessing the field via an interface.
+func (v *deleteLocalResponse) GetDeleteLocal() deleteLocalDeleteLocalDeviceUserID {
+	return v.DeleteLocal
+}
+
+// getLocalSavesGetLocalSaves includes the requested fields of the GraphQL type LocalSaves.
+type getLocalSavesGetLocalSaves struct {
+	IDs        []int    `json:"IDs"`
+	UserIDs    []int    `json:"UserIDs"`
+	Names      []string `json:"Names"`
+	Consoles   []string `json:"Consoles"`
+	Devices    []string `json:"Devices"`
+	TimeMods   []int    `json:"TimeMods"`
+	Paths      []string `json:"Paths"`
+	Thumbnails []string `json:"Thumbnails"`
+}
+
+// GetIDs returns getLocalSavesGetLocalSaves.IDs, and is useful for accessing the field via an interface.
+func (v *getLocalSavesGetLocalSaves) GetIDs() []int { return v.IDs }
+
+// GetUserIDs returns getLocalSavesGetLocalSaves.UserIDs, and is useful for accessing the field via an interface.
+func (v *getLocalSavesGetLocalSaves) GetUserIDs() []int { return v.UserIDs }
+
+// GetNames returns getLocalSavesGetLocalSaves.Names, and is useful for accessing the field via an interface.
+func (v *getLocalSavesGetLocalSaves) GetNames() []string { return v.Names }
+
+// GetConsoles returns getLocalSavesGetLocalSaves.Consoles, and is useful for accessing the field via an interface.
+func (v *getLocalSavesGetLocalSaves) GetConsoles() []string { return v.Consoles }
+
+// GetDevices returns getLocalSavesGetLocalSaves.Devices, and is useful for accessing the field via an interface.
+func (v *getLocalSavesGetLocalSaves) GetDevices() []string { return v.Devices }
+
+// GetTimeMods returns getLocalSavesGetLocalSaves.TimeMods, and is useful for accessing the field via an interface.
+func (v *getLocalSavesGetLocalSaves) GetTimeMods() []int { return v.TimeMods }
+
+// GetPaths returns getLocalSavesGetLocalSaves.Paths, and is useful for accessing the field via an interface.
+func (v *getLocalSavesGetLocalSaves) GetPaths() []string { return v.Paths }
+
+// GetThumbnails returns getLocalSavesGetLocalSaves.Thumbnails, and is useful for accessing the field via an interface.
+func (v *getLocalSavesGetLocalSaves) GetThumbnails() []string { return v.Thumbnails }
+
+// getLocalSavesResponse is returned by getLocalSaves on success.
+type getLocalSavesResponse struct {
+	GetLocalSaves getLocalSavesGetLocalSaves `json:"getLocalSaves"`
+}
+
+// GetGetLocalSaves returns getLocalSavesResponse.GetLocalSaves, and is useful for accessing the field via an interface.
+func (v *getLocalSavesResponse) GetGetLocalSaves() getLocalSavesGetLocalSaves { return v.GetLocalSaves }
+
+// getPathsGetPaths includes the requested fields of the GraphQL type Paths.
+type getPathsGetPaths struct {
+	Paths []string `json:"Paths"`
+	IDs   []int    `json:"IDs"`
+}
+
+// GetPaths returns getPathsGetPaths.Paths, and is useful for accessing the field via an interface.
+func (v *getPathsGetPaths) GetPaths() []string { return v.Paths }
+
+// GetIDs returns getPathsGetPaths.IDs, and is useful for accessing the field via an interface.
+func (v *getPathsGetPaths) GetIDs() []int { return v.IDs }
+
+// getPathsResponse is returned by getPaths on success.
+type getPathsResponse struct {
+	GetPaths getPathsGetPaths `json:"getPaths"`
+}
+
+// GetGetPaths returns getPathsResponse.GetPaths, and is useful for accessing the field via an interface.
+func (v *getPathsResponse) GetGetPaths() getPathsGetPaths { return v.GetPaths }
+
+// updateTimeResponse is returned by updateTime on success.
+type updateTimeResponse struct {
+	UpdateTime updateTimeUpdateTimePostTime `json:"updateTime"`
+}
+
+// GetUpdateTime returns updateTimeResponse.UpdateTime, and is useful for accessing the field via an interface.
+func (v *updateTimeResponse) GetUpdateTime() updateTimeUpdateTimePostTime { return v.UpdateTime }
+
+// updateTimeUpdateTimePostTime includes the requested fields of the GraphQL type PostTime.
+type updateTimeUpdateTimePostTime struct {
+	ID      int `json:"ID"`
+	TimeMod int `json:"TimeMod"`
+}
+
+// GetID returns updateTimeUpdateTimePostTime.ID, and is useful for accessing the field via an interface.
+func (v *updateTimeUpdateTimePostTime) GetID() int { return v.ID }
+
+// GetTimeMod returns updateTimeUpdateTimePostTime.TimeMod, and is useful for accessing the field via an interface.
+func (v *updateTimeUpdateTimePostTime) GetTimeMod() int { return v.TimeMod }
 
 // The mutation executed by createSaves.
 const createSaves_Operation = `
@@ -74,7 +250,7 @@ func createSaves(
 	device string,
 	console string,
 	directories []string,
-	timemod []int64,
+	timemod []int,
 ) (data_ *createSavesResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "createSaves",
@@ -88,6 +264,192 @@ func createSaves(
 	}
 
 	data_ = &createSavesResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The mutation executed by deleteLocal.
+const deleteLocal_Operation = `
+mutation deleteLocal ($device: String!, $userID: Int!) {
+	deleteLocal(input: {Device:$device,UserID:$userID}) {
+		Device
+		UserID
+	}
+}
+`
+
+func deleteLocal(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	device string,
+	userID int,
+) (data_ *deleteLocalResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "deleteLocal",
+		Query:  deleteLocal_Operation,
+		Variables: &__deleteLocalInput{
+			Device: device,
+			UserID: userID,
+		},
+	}
+
+	data_ = &deleteLocalResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The mutation executed by deleteLocalID.
+const deleteLocalID_Operation = `
+mutation deleteLocalID ($id: Int!) {
+	deleteLocalID(input: {ID:$id}) {
+		ID
+	}
+}
+`
+
+func deleteLocalID(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	id int,
+) (data_ *deleteLocalIDResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "deleteLocalID",
+		Query:  deleteLocalID_Operation,
+		Variables: &__deleteLocalIDInput{
+			Id: id,
+		},
+	}
+
+	data_ = &deleteLocalIDResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by getLocalSaves.
+const getLocalSaves_Operation = `
+query getLocalSaves ($userID: Int!) {
+	getLocalSaves(UserID: $userID) {
+		IDs
+		UserIDs
+		Names
+		Consoles
+		Devices
+		TimeMods
+		Paths
+		Thumbnails
+	}
+}
+`
+
+func getLocalSaves(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	userID int,
+) (data_ *getLocalSavesResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "getLocalSaves",
+		Query:  getLocalSaves_Operation,
+		Variables: &__getLocalSavesInput{
+			UserID: userID,
+		},
+	}
+
+	data_ = &getLocalSavesResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by getPaths.
+const getPaths_Operation = `
+query getPaths ($device: String!, $userID: Int!) {
+	getPaths(Device: $device, UserID: $userID) {
+		Paths
+		IDs
+	}
+}
+`
+
+func getPaths(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	device string,
+	userID int,
+) (data_ *getPathsResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "getPaths",
+		Query:  getPaths_Operation,
+		Variables: &__getPathsInput{
+			Device: device,
+			UserID: userID,
+		},
+	}
+
+	data_ = &getPathsResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The mutation executed by updateTime.
+const updateTime_Operation = `
+mutation updateTime ($id: Int!, $timemod: Int!) {
+	updateTime(input: {ID:$id,TimeMod:$timemod}) {
+		ID
+		TimeMod
+	}
+}
+`
+
+func updateTime(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	id int,
+	timemod int,
+) (data_ *updateTimeResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "updateTime",
+		Query:  updateTime_Operation,
+		Variables: &__updateTimeInput{
+			Id:      id,
+			Timemod: timemod,
+		},
+	}
+
+	data_ = &updateTimeResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(

@@ -1,17 +1,19 @@
 <script lang="ts">
     import Welcome from "./Welcome.svelte"
+    import Main from "./Main.svelte";
 
 </script>
 
 
 <div class="dark relative flex flex-col h-screen items-center justify-center bg-[#2C2F48] transition-bg">
-    <!--<div class="absolute inset-0 overflow-hidden">
+    <!-- <div class="absolute inset-0 overflow-hidden">
         <div class="dark jumbo absolute -inset-[10px] opacity-50">
             
         </div>
         
     </div>-->
-    <Welcome />
+    <Main />
+    <!-- Add back in for create account <Welcome /> -->
 </div>
 
 
