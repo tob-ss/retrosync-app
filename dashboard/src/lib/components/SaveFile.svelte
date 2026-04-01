@@ -23,3 +23,7 @@
     </div>
     <img class="col-start-1 row-start-1 h-full w-full object-contain object-center block" src={game.thumbnail} alt={altText} />
 </div>
+
+<style>
+    
+</style>

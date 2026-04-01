@@ -21,7 +21,7 @@
                 <h1>Memory Cards</h1>
                 </div>
             <div class="flex grow flex-col place-items-center gap-12 pt-12 pl-12">
-                <button class="rounded-xl border border-(--glass-border) w-full px-12 py-3 font-semibold shadow-lg/65 inset-shadow-sm inset-shadow-yellow/5 backdrop-blur-sm bg-(--glass-bg) inset-shadow-sm -fit cursor-pointer [&:hover]:scale-102 transition duration-10 active:inset-shadow-black/100" style="--bg: color-mix(in oklab, black 20%, transparent)">+</button>
+                <button class=" rounded-xl border border-(--glass-border) w-full py-3 font-semibold shadow-lg/65 inset-shadow-sm inset-shadow-yellow/5 backdrop-blur-sm bg-(--glass-bg) inset-shadow-sm -fit cursor-pointer [&:hover]:scale-102 transition duration-10 active:inset-shadow-black/100" style="--bg: color-mix(in oklab, black 20%, transparent)">+</button>
             </div>
         </div>
         <div class="col-start-1 row-start-8">
