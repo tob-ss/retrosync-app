@@ -1,20 +1,11 @@
 <script lang="ts">
-  import Background from "../lib/components/Background.svelte";
+  import { browser } from "$app/environment";
 
-  function beforeunload(event: BeforeUnloadEvent) {
-    event.preventDefault();
-    return event.returnValue = '';
+  if (browser) {
+    window.location.href = '/login'
   }
-
-
 </script>
 
-
-
-
-<Background />
-
-<svelte:window on:beforeunload={beforeunload}/>
 
 
 <style>

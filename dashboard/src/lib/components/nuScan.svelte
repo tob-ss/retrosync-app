@@ -1,7 +1,7 @@
 <script lang="ts">
    // import { CheckProgress } from '../../wailsjs/go/main/App'
    // import { StartScan } from '../../wailsjs/go/main/App';
-    import Main from './Main.svelte';
+    import Main from './nuMain.svelte';
     
 
     let scanningStart: boolean = $state(false);

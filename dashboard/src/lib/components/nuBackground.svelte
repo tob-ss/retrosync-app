@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Welcome from "./Welcome.svelte"
-    import Main from "./Main.svelte";
+    import Welcome from "./nuWelcome.svelte"
+    import Main from "./nuMain.svelte";
 
 </script>
 
@@ -11,9 +11,9 @@
             
         </div>
         
-    </div>-->
+    </div>
     <Main />
-    <!-- Add back in for create account <Welcome /> -->
+    Add back in for create account <Welcome /> -->
 </div>
 
 

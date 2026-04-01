@@ -1,8 +1,8 @@
 <script lang="ts">
-    import Scan from "./Scan.svelte";
+    import Scan from "./nuScan.svelte";
     //import { StartScan } from '../../wailsjs/go/main/App';
     //import { StartQuickScan } from '../../wailsjs/go/main/App';
-    import Main from "./Main.svelte";
+    import Main from "./nuMain.svelte";
     
 
     let scanningStart: boolean = $state(false);

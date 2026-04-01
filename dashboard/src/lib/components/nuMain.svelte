@@ -1,7 +1,7 @@
 <script lang="ts">
     import Sidebar from "./Sidebar.svelte";
     import Content from "./Content.svelte";
-    import Login from "./Login.svelte";
+    import Login from "./nuLogin.svelte";
     
 </script>
 

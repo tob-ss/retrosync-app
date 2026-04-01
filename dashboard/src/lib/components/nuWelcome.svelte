@@ -1,6 +1,6 @@
 <script lang="ts">
     import { fade } from 'svelte/transition'
-    import Setup from './Setup.svelte';
+    import Setup from './nuSetup.svelte';
 
     let visible = $state(false);
 
